@@ -1,1 +1,1 @@
-# SMT-based-Data-Aware-Processes-Verification
+# MCMT specification files of RAS benchmark
