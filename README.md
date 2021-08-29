@@ -1,1 +1,1 @@
-# SMT based Data Aware Processes Verification
+# SMT-based Data Aware Processes Verification
