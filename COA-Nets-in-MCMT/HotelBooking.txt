@@ -1,0 +1,420 @@
+:comment Hotel-Booking
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Hotel) 
+:smt (define-type Room) 
+:smt (define-type BOOLE)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define RoomHotel ::(-> Room Hotel))
+:smt (define RoomType ::(-> Room String))
+
+
+
+
+
+:smt (define TRUE ::BOOLE)
+:smt (define FALSE ::BOOLE)
+
+
+:db_driven 
+:db_sorts Hotel Room BOOLE String
+:db_functions RoomType RoomHotel 
+:db_constants  TRUE FALSE
+:db_relations 
+
+
+:local BookedRooms_1 Room
+:local BookedRooms_2 Hotel
+:local BookedRooms_3 String
+:local p3_1 Room
+:local p3_2 Hotel
+:local p3_3 String
+
+
+
+:global p1_1 Hotel
+:global p2_1 Room
+:global p2_2 Hotel
+:global p2_3 String
+:global in BOOLE
+:global init_fl BOOLE
+
+
+:initial
+:var x
+:cnj (= in FALSE)(= p1_1 NULL_Hotel)(= p2_1 NULL_Room)(= p2_2 NULL_Hotel)(= p2_3 NULL_String)(= BookedRooms_1[x] NULL_Room)(= BookedRooms_2[x] NULL_Hotel)(= BookedRooms_3[x] NULL_String)(= p3_1[x] NULL_Room)(= p3_2[x] NULL_Hotel)(= p3_3[x] NULL_String)(= init_fl TRUE)
+
+:u_cnj (not (= p2_1 NULL_Room))(not (= p2_2 NULL_Hotel))(not (= p2_3 NULL_String))(= p2_1 BookedRooms_1[z1])(= p2_2 BookedRooms_2[z1])(= p2_3 BookedRooms_3[z1])
+:u_cnj (not (= p3_1[z1] NULL_Room))(not (= p3_2[z1] NULL_Hotel))(not (= p3_3[z1] NULL_String))(= p3_1[z1] BookedRooms_1[z2])(= p3_2[z1] BookedRooms_2[z2])(= p3_3[z1] BookedRooms_3[z2])
+
+:eevar e Hotel   
+:eevar d Hotel
+:eevar f Hotel
+:eevar g Room
+:eevar l Room
+:eevar m Room
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q BOOLE
+
+
+:comment Initialization
+
+
+:comment T1
+:transition
+:var j
+:var x
+:guard  (= init_fl TRUE)(= x x)
+:numcases 2
+:case (= x j)
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val TRUE
+:val FALSE
+
+:case 
+
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+
+:val p1_1
+:val p2_1
+:val p2_2
+:val p2_3
+:val TRUE
+:val FALSE
+
+
+:comment  Choose Hotel
+
+
+:comment T2
+:transition
+:var j
+:guard  (= init_fl FALSE)(not (= e NULL_Hotel))(= in TRUE)
+:numcases 1
+:case 
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val e 
+:val p2_1
+:val p2_2
+:val p2_3
+:val FALSE
+:val init_fl
+
+
+
+
+
+
+:comment  ChooseRoom
+
+
+:comment T3
+:transition
+:var j
+:guard  (= init_fl FALSE)(not (= g NULL_Room))(= (RoomHotel g) p1_1)
+:numcases 1
+:case
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val NULL_Hotel
+:val g
+:val (RoomHotel g)
+:val (RoomType g)
+:val in
+:val init_fl
+
+
+
+
+
+
+:comment  BookOnline
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= init_fl FALSE)(not (= p2_1 NULL_Room))(not (= p2_2 NULL_Hotel))(not (= p2_3 NULL_String))(= BookedRooms_1[x] NULL_Room)(= BookedRooms_2[x] NULL_Hotel)(= BookedRooms_3[x] NULL_String)(= p3_1[x] NULL_Room)(= p3_2[x] NULL_Hotel)(= p3_3[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val p2_1 
+:val p2_2 
+:val p2_3
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+
+:case 
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+
+
+:comment RedoBooking
+
+:comment T5 
+:transition
+:var j
+:var x
+:var y
+:guard  (= init_fl FALSE)(not (= x y))(= BookedRooms_1[y] NULL_Room)(= BookedRooms_2[y] NULL_Hotel)(= BookedRooms_3[y] NULL_String)(= p3_1[y] NULL_Room)(= p3_2[y] NULL_Hotel)(= p3_3[y] NULL_String)(not (= BookedRooms_1[x] NULL_Room))(not (= BookedRooms_2[x] NULL_Hotel))(not (= BookedRooms_3[x] NULL_String))(= p2_1 BookedRooms_1[x])(= p2_2 BookedRooms_2[x])(= p2_3 BookedRooms_3[x])
+:numcases 3
+:case (= x j)
+:val NULL_Room 
+:val NULL_Hotel
+:val NULL_String
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1
+:val p2_1
+:val p2_2
+:val p2_3
+:val TRUE
+:val init_fl
+
+:case  (= y j)
+
+:val BookedRooms_1[x] 
+:val BookedRooms_2[x] 
+:val BookedRooms_3[x] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+:val p1_1
+:val p2_1
+:val p2_2
+:val p2_3
+:val TRUE
+:val init_fl
+
+
+:case  (not (= y j))(not (= x j))
+
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1
+:val p2_1
+:val p2_2
+:val p2_3
+:val TRUE
+:val init_fl
+
+
+
+
+
+:comment  RequestOnSite
+
+
+:comment T6
+:transition
+:var j
+:var x
+:guard  (= init_fl FALSE)(not (= g NULL_Room))(= BookedRooms_1[x] NULL_Room)(= BookedRooms_2[x] NULL_Hotel)(= BookedRooms_3[x] NULL_String)(= p3_1[x] NULL_Room)(= p3_2[x] NULL_Hotel)(= p3_3[x] NULL_String)(not (= e NULL_Room))(= (RoomHotel g) e)
+:numcases 2
+:case (= x j)
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j]  
+:val g 
+:val e
+:val (RoomType g) 
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+:case 
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+
+
+
+:comment   RegisterRoom
+
+
+:comment T7
+:transition
+:var j
+:var x
+:var y
+:guard  (= init_fl FALSE)(not (= x y))(= BookedRooms_1[y] NULL_Room)(= BookedRooms_2[y] NULL_Hotel)(= BookedRooms_3[y] NULL_String)(= p3_1[y] NULL_Room)(= p3_2[y] NULL_Hotel)(= p3_3[y] NULL_String)(not (= p3_1[x] NULL_Room))(not (= p3_2[x] NULL_Hotel))(not (= p3_3[x] NULL_String))
+:numcases 3
+:case (= x j)
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val NULL_Room
+:val NULL_Hotel
+:val NULL_String
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+:case  (= y j)
+
+:val p3_1[x]  
+:val p3_2[x]  
+:val p3_3[x]  
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+:val p1_1
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+
+:case  (not (= y j))(not (= x j))
+
+:val BookedRooms_1[j] 
+:val BookedRooms_2[j] 
+:val BookedRooms_3[j] 
+:val p3_1[j] 
+:val p3_2[j] 
+:val p3_3[j]
+
+
+:val p1_1 
+:val p2_1
+:val p2_2
+:val p2_3
+:val in
+:val init_fl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
