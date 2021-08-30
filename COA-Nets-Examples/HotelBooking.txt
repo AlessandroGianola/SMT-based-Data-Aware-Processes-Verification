@@ -7,7 +7,7 @@
 
 :smt (define-type HName) 
 :smt (define-type Rid) 
-:smt (define-type BOOLE)
+:smt (define-type Bool)
 :smt (define-type String)
 :comment ---------- FUNCTIONS and PREDICATES -----------
 
@@ -19,12 +19,12 @@
 
 
 
-:smt (define TRUE ::BOOLE)
-:smt (define FALSE ::BOOLE)
+:smt (define TRUE ::Bool)
+:smt (define FALSE ::Bool)
 
 
 :db_driven 
-:db_sorts HName Rid BOOLE String
+:db_sorts HName Rid Bool String
 :db_functions RidType RidHName 
 :db_constants  TRUE FALSE
 :db_relations 
@@ -43,8 +43,8 @@
 :global p2_1 Rid
 :global p2_2 HName
 :global p2_3 String
-:global in BOOLE
-:global init_fl BOOLE
+:global in Bool
+:global init_fl Bool
 
 
 :initial
@@ -63,7 +63,7 @@
 :eevar n String
 :eevar o String
 :eevar p String
-:eevar q BOOLE
+:eevar q Bool
 
 
 :comment Initialization
