@@ -12,8 +12,8 @@
 :comment ---------- FUNCTIONS and PREDICATES -----------
 
 
-:smt (define RidHName ::(-> Rid HName))
-:smt (define RidType ::(-> Rid String))
+:smt (define RoomHName ::(-> Rid HName))
+:smt (define RoomType ::(-> Rid String))
 
 
 
@@ -25,7 +25,7 @@
 
 :db_driven 
 :db_sorts HName Rid Bool String
-:db_functions RidType RidHName 
+:db_functions RoomType RoomHName 
 :db_constants  TRUE FALSE
 :db_relations 
 
@@ -146,7 +146,7 @@
 :comment T3
 :transition
 :var j
-:guard  (= init_fl FALSE)(not (= g NULL_Rid))(= (RidHName g) p1_1)
+:guard  (= init_fl FALSE)(not (= g NULL_Rid))(= (RoomHName g) p1_1)
 :numcases 1
 :case
 :val BookedRooms_1[j] 
@@ -159,8 +159,8 @@
 
 :val NULL_HName
 :val g
-:val (RidHName g)
-:val (RidType g)
+:val (RoomHName g)
+:val (RoomType g)
 :val in
 :val init_fl
 
@@ -283,7 +283,7 @@
 :transition
 :var j
 :var x
-:guard  (= init_fl FALSE)(not (= g NULL_Rid))(= BookedRooms_1[x] NULL_Rid)(= BookedRooms_2[x] NULL_HName)(= BookedRooms_3[x] NULL_String)(= p3_1[x] NULL_Rid)(= p3_2[x] NULL_HName)(= p3_3[x] NULL_String)(not (= e NULL_Rid))(= (RidHName g) e)
+:guard  (= init_fl FALSE)(not (= g NULL_Rid))(= BookedRooms_1[x] NULL_Rid)(= BookedRooms_2[x] NULL_HName)(= BookedRooms_3[x] NULL_String)(= p3_1[x] NULL_Rid)(= p3_2[x] NULL_HName)(= p3_3[x] NULL_String)(not (= e NULL_Rid))(= (RoomHName g) e)
 :numcases 2
 :case (= x j)
 :val BookedRooms_1[j] 
@@ -291,7 +291,7 @@
 :val BookedRooms_3[j]  
 :val g 
 :val e
-:val (RidType g) 
+:val (RoomType g) 
 
 
 :val p1_1 
