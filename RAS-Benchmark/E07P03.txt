@@ -1,0 +1,577 @@
+:comment Book-Writing-and-Publishing
+
+:index int
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type BookWriter) 
+:smt (define-type Publisher) 
+:smt (define-type String)
+
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+
+:smt (define BookWrName::(-> BookWriter String))
+:smt (define BookWrPub::(-> BookWriter Publisher))
+:smt (define PubName::(-> Publisher String))
+:smt (define No ::String)
+:smt (define Yes ::String)
+
+
+:db_driven 
+:db_sorts BookWriter Publisher String 
+:db_functions BookWrName BookWrPub PubName  
+:db_constants  Yes No
+:db_relations 
+
+
+:local Chapter1 String
+:local Chapter2 String
+:local PublishBook1 BookWriter
+:local PublishBook2 Publisher
+
+:global T1_chapter String
+:global T1_content String
+:global T1_wid BookWriter
+:global T1_pid Publisher
+:global T1_texted String
+:global T1_covercom String
+:global T1_published String
+:global T2_chapter String
+:global T2_content String
+:global T2_coveredit String
+:global T3_chapter String
+:global T3_content String
+:global T3_textedit String
+:global T3_concept String
+:global actT2 bool
+:global actT3 bool
+
+
+
+
+:initial
+:var x
+:cnj (=  T1_chapter  NULL_String) (=  T1_content  NULL_String) (=  T1_wid  NULL_BookWriter) (=  T1_pid  NULL_Publisher) (=  T1_texted NULL_String) (=  T1_covercom NULL_String) (= T1_published NULL_String) (= T2_chapter NULL_String) (= T2_content NULL_String) (= T2_coveredit NULL_String) (= T3_chapter NULL_String) (= T3_content NULL_String) (= T3_textedit NULL_String) (= T3_concept NULL_String) (= Chapter1[x] NULL_String)(= Chapter2[x] NULL_String) (= PublishBook1[x] NULL_BookWriter)(= PublishBook2[x] NULL_Publisher)(= actT2 false)(= actT3 false)
+
+:u_cnj (= T1_published Yes)(not (= T2_coveredit Yes))
+
+:eevar e BookWriter
+:eevar d Publisher
+:eevar f String
+:eevar g String
+:eevar l String
+:eevar m String
+:eevar n String
+
+:comment T_1 Initialize 
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_texted NULL_String)(not (= e NULL_BookWriter))
+:numcases 1
+:case 
+ :val Chapter1[j]
+ :val Chapter2[j]
+ :val PublishBook1[j]
+ :val PublishBook2[j]
+ 
+ :val m 
+ :val n
+ :val e
+ :val T1_pid
+ :val No
+ :val No
+ :val No
+ :val T2_chapter 
+ :val T2_content 
+ :val T2_coveredit 
+ :val T3_chapter 
+ :val T3_content 
+ :val T3_textedit 
+ :val T3_concept 
+ :val actT2 
+ :val actT3 
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_covercom NULL_String)(not (= e NULL_BookWriter))
+:numcases 1
+:case 
+ :val Chapter1[j]
+ :val Chapter2[j]
+ :val PublishBook1[j]
+ :val PublishBook2[j]
+ 
+ :val m
+ :val n
+ :val e
+ :val T1_pid 
+ :val No
+ :val No
+ :val No
+ :val T2_chapter 
+ :val T2_content 
+ :val T2_coveredit 
+ :val T3_chapter 
+ :val T3_content 
+ :val T3_textedit 
+ :val T3_concept 
+ :val actT2 
+ :val actT3 
+
+
+:comment T_1 AddNewChapter
+
+:comment T3
+:transition
+:var x
+:var j
+:guard  (= actT2 false)(= actT3 false)(not (= T1_chapter NULL_String))(= Chapter1[x] NULL_String)(= Chapter2[x] NULL_String)(not (= m Yes))
+:uguard (not (= Chapter1[j] T1_chapter))(not (= Chapter2[j] T1_content))
+:numcases 2
+:case (= j x)
+ :val T1_chapter
+ :val T1_content
+ :val PublishBook1[j]
+ :val PublishBook2[j]
+ 
+ :val NULL_String
+ :val NULL_String
+ :val e
+ :val d
+ :val f
+ :val g
+ :val m
+ :val T2_chapter 
+ :val T2_content 
+ :val T2_coveredit 
+ :val T3_chapter 
+ :val T3_content 
+ :val T3_textedit 
+ :val T3_concept 
+ :val actT2 
+ :val actT3 
+:case 
+ :val Chapter1[j]
+ :val Chapter2[j]
+ :val PublishBook1[j]
+ :val PublishBook2[j]
+ 
+ :val NULL_String
+ :val NULL_String
+ :val e
+ :val d
+ :val f
+ :val g
+ :val m
+ :val T2_chapter 
+ :val T2_content 
+ :val T2_coveredit 
+ :val T3_chapter 
+ :val T3_content 
+ :val T3_textedit 
+ :val T3_concept 
+ :val actT2 
+ :val actT3 
+ 
+ :comment T_1 RetrieveOutline
+ 
+ :comment T4
+ :transition
+ :var x
+ :var j
+ :guard  (= actT2 false)(= actT3 false)(= T1_chapter NULL_String)(not (= Chapter1[x] NULL_String))(not (= Chapter2[x] NULL_String))(not (= m Yes))
+ :numcases 2
+ :case (= j x)
+  :val NULL_String
+  :val NULL_String
+  :val PublishBook1[j]
+  :val PublishBook2[j]
+  
+  :val Chapter1[x] 
+  :val Chapter2[x]
+  :val e
+  :val d
+  :val g
+  :val l
+  :val m
+  :val T2_chapter 
+  :val T2_content 
+  :val T2_coveredit 
+  :val T3_chapter 
+  :val T3_content 
+  :val T3_textedit 
+  :val T3_concept 
+  :val actT2 
+  :val actT3 
+ :case 
+  :val Chapter1[j]
+  :val Chapter2[j]
+  :val PublishBook1[j]
+  :val PublishBook2[j]
+  
+  :val Chapter1[x] 
+  :val Chapter2[x]
+  :val e
+  :val d
+  :val g
+  :val l
+  :val m
+  :val T2_chapter 
+  :val T2_content 
+  :val T2_coveredit 
+  :val T3_chapter 
+  :val T3_content 
+  :val T3_textedit 
+  :val T3_concept 
+  :val actT2 
+  :val actT3
+  
+  :comment T_1 PublishBook
+  
+  :comment T5
+  :transition
+  :var x
+  :var j
+  :guard  (= actT2 false)(= actT3 false)(= T1_covercom Yes)(= T1_texted Yes)(= PublishBook1[x] NULL_BookWriter)(= PublishBook2[x] NULL_Publisher)(not (= d NULL_Publisher))
+  :uguard (not (= PublishBook1[j] T1_wid))(not (= PublishBook2[j] T1_pid))
+  :numcases 2
+  :case (= j x)
+   :val Chapter1[j]
+   :val Chapter2[j]
+   :val T1_wid
+   :val T1_pid
+   
+   :val m
+   :val n
+   :val e
+   :val d
+   :val f
+   :val g 
+   :val Yes
+   :val T2_chapter 
+   :val T2_content 
+   :val T2_coveredit 
+   :val T3_chapter 
+   :val T3_content 
+   :val T3_textedit 
+   :val T3_concept 
+   :val actT2 
+   :val actT3
+  :case
+   :val Chapter1[j]
+   :val Chapter2[j]
+   :val PublishBook1[j]
+   :val PublishBook2[j]
+   
+   :val m
+   :val n
+   :val e
+   :val d
+   :val f
+   :val g 
+   :val Yes
+   :val T2_chapter 
+   :val T2_content 
+   :val T2_coveredit 
+   :val T3_chapter 
+   :val T3_content 
+   :val T3_textedit 
+   :val T3_concept 
+   :val actT2 
+   :val actT3 
+   
+   :comment T6
+   :transition
+   :var x
+   :var j
+   :guard  (= actT2 false)(= actT3 false)(= T1_covercom Yes)(= T1_texted Yes)(= PublishBook1[x] NULL_BookWriter)(= PublishBook2[x] NULL_Publisher)(not (= e NULL_BookWriter))
+   :uguard (not (= PublishBook1[j] T1_wid))(not (= PublishBook2[j] T1_pid))
+   :numcases 2
+   :case (= j x)
+    :val Chapter1[j]
+    :val Chapter2[j]
+    :val T1_wid
+    :val T1_pid
+    
+    :val m
+    :val n
+    :val e
+    :val (BookWrPub e) 
+    :val g
+    :val l
+    :val Yes
+    :val T2_chapter 
+    :val T2_content 
+    :val T2_coveredit 
+    :val T3_chapter 
+    :val T3_content 
+    :val T3_textedit 
+    :val T3_concept 
+    :val actT2 
+    :val actT3
+   :case 
+    :val Chapter1[j]
+    :val Chapter2[j]
+    :val PublishBook1[j]
+    :val PublishBook2[j]
+    
+    :val m
+    :val n
+    :val e
+    :val (BookWrPub e) 
+    :val g
+    :val l 
+    :val Yes
+    :val T2_chapter 
+    :val T2_content 
+    :val T2_coveredit 
+    :val T3_chapter 
+    :val T3_content 
+    :val T3_textedit 
+    :val T3_concept 
+    :val actT2 
+    :val actT3
+   
+ 	:comment  T_2 WriteCover opening
+	
+   :comment T7
+   :transition
+   :var j
+   :guard  (= actT2 false)(= actT3 false) (not (= T1_chapter NULL_String))
+   :numcases 1
+   :case 
+    :val Chapter1[j]
+    :val Chapter2[j]
+    :val PublishBook1[j]
+    :val PublishBook2[j]
+    
+    :val T1_chapter 
+    :val T1_content 
+    :val T1_wid 
+    :val T1_pid 
+    :val T1_texted
+    :val T1_covercom 
+    :val T1_published 
+    :val T1_chapter 
+    :val NULL_String
+    :val NULL_String
+    :val T3_chapter 
+    :val T3_content 
+    :val T3_textedit 
+    :val T3_concept 
+    :val true 
+    :val actT3
+	
+	:comment T_2 DevelopBookCover
+	
+    :comment T8
+    :transition
+    :var j
+    :guard  (= actT2 true)(= actT3 false)(= T2_content NULL_String)(not (= g NULL_String))
+    :numcases 1
+    :case 
+     :val Chapter1[j]
+     :val Chapter2[j]
+     :val PublishBook1[j]
+     :val PublishBook2[j]
+     
+     :val T1_chapter 
+     :val T1_content 
+     :val T1_wid 
+     :val T1_pid 
+     :val T1_texted
+     :val T1_covercom 
+     :val T1_published 
+     :val T2_chapter 
+     :val g
+     :val Yes
+     :val T3_chapter 
+     :val T3_content 
+     :val T3_textedit 
+     :val T3_concept 
+     :val true 
+     :val actT3
+	 
+	 :comment T_2 WriteCover closing
+     :comment T9
+     :transition
+     :var j
+     :guard  (= actT2 true)(= actT3 false) (not (= T2_content NULL_String)) (= T2_coveredit Yes)
+     :numcases 1
+     :case 
+      :val Chapter1[j]
+      :val Chapter2[j]
+      :val PublishBook1[j]
+      :val PublishBook2[j]
+      
+      :val T1_chapter 
+      :val T2_content
+      :val T1_wid 
+      :val T1_pid 
+      :val T1_texted
+      :val T2_coveredit 
+      :val T1_published 
+      :val T2_chapter 
+      :val T2_content
+      :val T2_coveredit
+      :val T3_chapter 
+      :val T3_content 
+      :val T3_textedit 
+      :val T3_concept 
+      :val false
+      :val actT3
+	  
+      :comment  T_3 WriteText opening
+	
+      :comment T10
+      :transition
+      :var j
+      :guard  (= actT2 false)(= actT3 false) (not (= T1_chapter NULL_String))
+      :numcases 1
+      :case 
+       :val Chapter1[j]
+       :val Chapter2[j]
+       :val PublishBook1[j]
+       :val PublishBook2[j]
+       
+       :val T1_chapter 
+       :val T1_content 
+       :val T1_wid 
+       :val T1_pid 
+       :val T1_texted
+       :val T1_covercom 
+       :val T1_published 
+       :val T2_chapter 
+       :val T2_content
+       :val T2_coveredit
+       :val T1_chapter 
+       :val NULL_String
+       :val NULL_String
+       :val NULL_String
+       :val actT2 
+       :val true
+
+	   
+       :comment  T_3 DevelopBookTextAndConcepts
+	
+       :comment T11
+       :transition
+       :var j
+       :guard  (= actT2 false)(= actT3 true)(= T3_concept NULL_String) (not (= g NULL_String)) 
+       :numcases 1
+       :case 
+        :val Chapter1[j]
+        :val Chapter2[j]
+        :val PublishBook1[j]
+        :val PublishBook2[j]
+        
+        :val T1_chapter 
+        :val T1_content 
+        :val T1_wid 
+        :val T1_pid 
+        :val T1_texted
+        :val T1_covercom 
+        :val T1_published 
+        :val T2_chapter 
+        :val T2_content
+        :val T2_coveredit
+        :val T3_chapter 
+        :val g
+        :val l
+        :val m
+        :val actT2 
+        :val actT3
+
+:comment T12
+       :transition
+       :var j
+       :guard  (= actT2 false)(= actT3 true)(= T3_concept NULL_String) (not (= g NULL_String)) 
+       :numcases 1
+       :case 
+        :val Chapter1[j]
+        :val Chapter2[j]
+        :val PublishBook1[j]
+        :val PublishBook2[j]
+        
+        :val T1_chapter 
+        :val T1_content 
+        :val T1_wid 
+        :val T1_pid 
+        :val T1_texted
+        :val T1_covercom 
+        :val T1_published 
+        :val T2_chapter 
+        :val T2_content
+        :val T2_coveredit
+        :val T3_chapter 
+        :val g
+        :val l
+        :val NULL_String
+        :val actT2 
+        :val actT3
+
+       :comment  T_3 EditBookText
+	
+       :comment T13
+       :transition
+       :var j
+       :guard  (= actT2 false)(= actT3 true) (not (= T3_concept NULL_String)) (not (= g NULL_String))
+       :numcases 1
+       :case 
+        :val Chapter1[j]
+        :val Chapter2[j]
+        :val PublishBook1[j]
+        :val PublishBook2[j]
+        
+        :val T1_chapter 
+        :val T1_content 
+        :val T1_wid 
+        :val T1_pid 
+        :val T1_texted
+        :val T1_covercom 
+        :val T1_published 
+        :val T2_chapter 
+        :val T2_content
+        :val T2_coveredit
+        :val T3_chapter 
+        :val g
+        :val Yes
+        :val l
+        :val actT2 
+        :val actT3
+		
+      :comment  T_3 WriteText closing
+	
+      :comment T14
+      :transition
+      :var j
+      :guard  (= actT2 false)(= actT3 true) (not (= T3_content NULL_String)) (= T3_textedit Yes)
+      :numcases 1
+      :case 
+       :val Chapter1[j]
+       :val Chapter2[j]
+       :val PublishBook1[j]
+       :val PublishBook2[j]
+       
+       :val T1_chapter 
+       :val T3_content 
+       :val T1_wid 
+       :val T1_pid 
+       :val T3_textedit
+       :val T1_covercom 
+       :val T1_published 
+       :val T2_chapter 
+       :val T2_content
+       :val T2_coveredit
+       :val T3_chapter 
+       :val T3_content
+       :val T3_textedit
+       :val T3_concept
+       :val actT2 
+       :val false
+

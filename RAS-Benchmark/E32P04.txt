@@ -1,0 +1,4133 @@
+:comment Travel-Booking-with-Event-Sub-processes
+
+:max_transitions_number 70
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type Hotel) 
+:smt (define-type Flight)
+:smt (define-type CreditCard)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define HotelName ::(-> Hotel String))
+:smt (define HotelCity ::(-> Hotel String))
+:smt (define HotelPrice ::(-> Hotel int))
+:smt (define FlightName ::(-> Flight String))
+:smt (define FlightCityFrom ::(-> Flight String))
+:smt (define FlightCityTo ::(-> Flight String))
+:smt (define FlightPrice ::(-> Flight int))
+:smt (define CreditCardNum ::(-> CreditCard String))
+:smt (define CreditCardCust ::(-> CreditCard Customer))
+
+
+:smt (define Requested ::String)
+:smt (define Chosen ::String)
+:smt (define Alternative ::String)
+:smt (define CandidateToCustomer ::String)
+:smt (define Approved ::String)
+:smt (define Hours24 ::String)
+:smt (define Cancel ::String)
+:smt (define StartBooking ::String)
+:smt (define Cancelled ::String)
+:smt (define Booked ::String)
+:smt (define CardVerified ::String)
+:smt (define CardNotVerified ::String)
+:smt (define PaymentFailed ::String)
+:smt (define Sec30  ::String)
+:smt (define InvestigateFailed ::String)
+:smt (define ManualBooking ::String)
+:smt (define Failed ::String)
+:smt (define Paid ::String)
+:smt (define ChargeNotApproved ::String)
+:smt (define Recorded  ::String)
+:smt (define ChargeApproved ::String)
+:smt (define ItinerarySent ::String)
+:smt (define HotelFailed  ::String)
+:smt (define FlightSucceeded ::String)
+:smt (define FlightFailed ::String)
+:smt (define HotelSucceeded ::String)
+:smt (define ErrorHandled  ::String)
+:smt (define FlightHandled ::String)
+
+
+:db_driven 
+:db_sorts Customer Hotel Flight CreditCard String
+:db_functions CustomerName  HotelName  HotelCity HotelPrice  FlightName FlightCityFrom FlightCityTo FlightPrice  CreditCardNum  CreditCardCust
+:db_constants Requested Chosen  Alternative  CandidateToCustomer  Approved  Hours24  Cancel  StartBooking  Cancelled  Booked  CardVerified  CardNotVerified  PaymentFailed  Sec30
+:db_constants  InvestigateFailed  ManualBooking  Failed  Paid   ChargeNotApproved  Recorded  ChargeApproved  ItinerarySent  HotelFailed FlightSucceeded  FlightFailed  
+:db_constants    HotelSucceeded  ErrorHandled   FlightHandled 
+:db_relations 
+
+:local CandidateForCustomer1  Flight
+:local CandidateForCustomer2  Hotel
+:local Candidate1  Flight
+:local Candidate2  Hotel
+:local Record1  Customer
+:local Record2  CreditCard
+:local Record3  Flight
+:local Record4  Hotel
+:local Record5 String
+:local Itinerary1 Customer
+:local Itinerary2 Flight
+:local Itinerary3 Hotel
+:local Transaction1 CreditCard
+:local Transaction2 int
+
+
+:global T1_cid Customer
+:global T1_cityfrom String
+:global T1_cityto String
+:global T1_hid Hotel
+:global T1_fid Flight
+:global T1_cardid  CreditCard
+:global T1_status String
+:global T2_cityfrom String
+:global T2_cityto String
+:global T2_hid Hotel
+:global T2_fid Flight
+:global T2_status String
+:global T3_cid Customer
+:global T3_cardid  CreditCard
+:global T3_hid Hotel
+:global T3_fid Flight
+:global T3_status String
+:global T3_amountpaid int
+:global T4_inputcardid  CreditCard
+:global T4_cardid  CreditCard
+:global T4_hid Hotel
+:global T4_fid Flight
+:global T4_hotelstatus String
+:global T4_flightstatus String
+:global T4_status String
+:global T4_amountpaid int
+:global T4_hotelprice int
+:global T4_flightprice int
+:global T5_hid Hotel
+:global T5_fid Flight
+:global T5_cid Customer
+:global T5_status String
+:global actT2 bool
+:global actT3 bool
+:global actT4 bool
+:global actT5 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_cid NULL_Customer) (=  T1_cityfrom NULL_String) (=  T1_cityto NULL_String) (=   T1_hid NULL_Hotel)(= T1_fid NULL_Flight)(= T1_cardid  NULL_CreditCard) (= T1_status NULL_String) (= T2_cityfrom NULL_String) (= T2_cityto NULL_String)(= T2_hid NULL_Hotel)(= T2_fid NULL_Flight)(= T2_status NULL_String)(=  T3_cid NULL_Customer)(= T3_cardid  NULL_CreditCard)(=   T3_hid NULL_Hotel)(= T3_fid NULL_Flight) (= T3_status NULL_String) (= T3_amountpaid -1)(= T4_cardid  NULL_CreditCard)(=   T4_hid NULL_Hotel)(= T4_fid NULL_Flight) (= T4_hotelstatus NULL_String)(= T4_flightstatus NULL_String)(= T4_status NULL_String) (= T4_amountpaid -1)(= T4_hotelprice -1)(= T4_flightprice -1)(=   T5_hid NULL_Hotel)(= T5_fid NULL_Flight)(= T5_cid NULL_Customer) (= T5_status NULL_String)(= CandidateForCustomer1[x]   NULL_Flight)(= CandidateForCustomer2[x]   NULL_Hotel)(= Candidate1[x]   NULL_Flight)(= Candidate2[x]   NULL_Hotel)(= Record1[x]   NULL_Customer)(= Record2[x]   NULL_CreditCard)(= Record3[x]   NULL_Flight)(= Record4[x] NULL_Hotel)(= Record5[x] NULL_String)(= Itinerary1[x]   NULL_Customer)(= Itinerary2[x]   NULL_Flight)(= Itinerary3[x] NULL_Hotel)(= Transaction1[x] NULL_CreditCard)(= Transaction2[x] -1)(=  actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)
+
+:u_cnj (= T3_status ChargeNotApproved)
+
+:eevar e Customer    
+:eevar d Hotel 
+:eevar f Flight
+:eevar g CreditCard
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: ReceiveRequest
+
+:comment T_1 GetRequest
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(not (= e NULL_Customer))(not (= l NULL_String))(not (= m NULL_String))
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val e 
+:val l 
+:val m 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Requested 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1 CustomerReview1
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Chosen)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Alternative 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1 CustomerReview2
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Chosen)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val CandidateToCustomer 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1: PresentCandToCustomer1
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status CandidateToCustomer)(= CandidateForCustomer1[x]   NULL_Flight)(= CandidateForCustomer2[x]   NULL_Hotel)
+:numcases 2
+:case (= x j)
+:val T1_fid
+:val T1_hid 
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Approved 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Approved  
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:comment T_1: PresentCandToCustomer2
+
+:comment T5
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status CandidateToCustomer)(= CandidateForCustomer1[x]   NULL_Flight)(= CandidateForCustomer2[x]   NULL_Hotel)
+:numcases 2
+:case (= x j)
+:val T1_fid
+:val T1_hid 
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Hours24 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Hours24  
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1: PresentCandToCustomer3
+
+:comment T6
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status CandidateToCustomer)(= CandidateForCustomer1[x]   NULL_Flight)(= CandidateForCustomer2[x]   NULL_Hotel)
+:numcases 2
+:case (= x j)
+:val T1_fid
+:val T1_hid 
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Cancel
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Cancel  
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_1 RequestCreditCardInfo1
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Approved)(not (= g NULL_CreditCard))
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val g  
+:val StartBooking 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1 RequestCreditCardInfo2
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Approved)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val NULL_CreditCard 
+:val Hours24 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_1 NotifyToStartOver
+
+:comment T9  
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Hours24)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val NULL_String
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_1 UpdateRecord
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Cancel)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val Cancelled
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2: Search
+
+:comment T_2 opening1
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Requested)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T1_cityfrom 
+:val T1_cityto 
+:val NULL_Hotel
+:val NULL_Flight
+:val NULL_String
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val true 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_2 opening2
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status Alternative)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T1_cityfrom 
+:val T1_cityto 
+:val NULL_Hotel
+:val NULL_Flight
+:val NULL_String
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val true 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2 SearchFlight
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(= T2_fid NULL_Flight)(not (= f NULL_Flight))(= (FlightCityFrom f)  T2_cityfrom)(= (FlightCityTo f)  T2_cityto)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto
+:val T2_hid 
+:val f 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2 SearchHotel
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(= T2_hid NULL_Hotel)(not (= d NULL_Hotel))(= (HotelCity d)  T2_cityto)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto
+:val d 
+:val T2_fid
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2  AddCandidate 
+
+:comment T15
+:transition
+:var j
+:var x
+:guard  (= actT2  true)(= actT3 false)(= actT4 false)(= actT5 false)(= Candidate1[x]   NULL_Flight)(= Candidate2[x]   NULL_Hotel)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val T2_fid  
+:val T2_hid
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val NULL_Hotel 
+:val NULL_Flight 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:case
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val NULL_Hotel 
+:val NULL_Flight 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_2 RetrieveCandidate1
+
+:comment T16
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(not (= Candidate1[x]   NULL_Flight))(not (= Candidate2[x]   NULL_Hotel))  
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val NULL_Flight  
+:val NULL_Hotel
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val Chosen 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val Chosen 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2 RetrieveCandidate2
+
+:comment T17
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(not (= Candidate1[x]   NULL_Flight))(= Candidate2[x]   NULL_Hotel) 
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val NULL_Flight  
+:val NULL_Hotel
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val NULL_String 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val NULL_String 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_2 RetrieveCandidate2
+
+:comment T18
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(= Candidate1[x]   NULL_Flight)(not (= Candidate2[x]   NULL_Hotel))
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val NULL_Flight  
+:val NULL_Hotel
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val NULL_String 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val Candidate2[x]
+:val Candidate1[x] 
+:val NULL_String 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5
+
+
+
+
+:comment T_2 closing 
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= actT5 false)(= T2_status Chosen)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T1_cardid  
+:val T2_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val false
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_3: Booking
+
+
+:comment T_3 opening
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= actT5 false)(= T1_status StartBooking)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T1_cid 
+:val T1_cardid  
+:val T1_hid 
+:val T1_fid 
+:val NULL_String
+:val -1
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val true
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_3  VerifyCard1
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(not (= T3_cardid NULL_CreditCard))(= (CreditCardCust T3_cardid) T3_cid)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val CardVerified 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:comment T_3  VerifyCard1
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(not (= T3_cardid NULL_CreditCard))(not (= (CreditCardCust T3_cardid) T3_cid))
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val CardNotVerified 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 Payment Fail1
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status PaymentFailed)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Sec30 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_3 Payment Fail2
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status PaymentFailed)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val ManualBooking 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_3 ManualBooking1
+
+:comment T25
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status ManualBooking)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Failed 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 ManualBooking2
+
+:comment T26
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status ManualBooking)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Paid
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 UpdateRecord1 
+
+:comment T27
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status Failed)(= Record1[x]   NULL_Customer)(= Record2[x]   NULL_CreditCard)(= Record3[x]   NULL_Flight)(= Record4[x] NULL_Hotel)(= Record5[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val T3_cid 
+:val T3_cardid   
+:val T3_fid   
+:val T3_hid  
+:val T3_status 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Recorded
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Recorded 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 UpdateRecord2
+
+:comment T28
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status ChargeNotApproved)(= Record1[x]   NULL_Customer)(= Record2[x]   NULL_CreditCard)(= Record3[x]   NULL_Flight)(= Record4[x] NULL_Hotel)(= Record5[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val T3_cid 
+:val T3_cardid   
+:val T3_fid   
+:val T3_hid  
+:val T3_status 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Recorded
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Recorded 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+
+
+
+:comment T_3 ChargeCustomer1
+
+:comment T29
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status Paid)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val ChargeNotApproved 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_3 ChargeCustomer2
+
+:comment T30
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status Paid)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val ChargeApproved 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 Send Itinerary
+
+:comment T31
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status ChargeApproved)(= Itinerary1[x]   NULL_Customer)(= Itinerary2[x]   NULL_Flight)(= Itinerary3[x] NULL_Hotel)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val T3_cid 
+:val T3_fid 
+:val T3_hid 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Booked
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val Booked 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_3 closing
+
+:comment T32
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status Booked)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T3_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val false 
+:val actT4 
+:val actT5 
+
+
+
+
+
+:comment T_4: Payment
+
+
+:comment T_4 opening1
+
+:comment T33
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status CardVerified)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T3_cardid  
+:val NULL_CreditCard 
+:val T3_hid 
+:val T3_fid 
+:val NULL_String 
+:val NULL_String 
+:val  NULL_String
+:val -1
+:val -1
+:val -1 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val true 
+:val actT5 
+
+
+
+:comment T_4 opening2
+
+:comment T34
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)(= T3_status Sec30)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T3_cardid  
+:val NULL_CreditCard 
+:val T3_hid 
+:val T3_fid 
+:val NULL_String 
+:val NULL_String 
+:val  NULL_String
+:val -1
+:val -1
+:val -1 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val true 
+:val actT5 
+
+
+
+:comment T_4  UpdateCreditCard1
+
+:comment T35
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(= T4_cardid NULL_CreditCard)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_inputcardid
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_4  UpdateCreditCard2
+
+:comment T36
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(= T4_cardid NULL_CreditCard)(not (= g NULL_CreditCard))
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val g
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_4 PayHotel1
+
+:comment T37
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(not (= T4_cardid NULL_CreditCard))(not (= T4_hotelstatus HotelSucceeded))(not (= T4_hid NULL_Hotel))(= (HotelPrice T4_hid) q)(= Transaction1[x] NULL_CreditCard)(= Transaction2[x] -1)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val T4_cardid 
+:val q
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val HotelFailed
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val q
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val HotelFailed
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val q
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_4 PayHotel2
+
+:comment T38
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(not (= T4_cardid NULL_CreditCard))(not (= T4_hotelstatus HotelSucceeded))(not (= T4_hid NULL_Hotel))(= (HotelPrice T4_hid) q)(= Transaction1[x] NULL_CreditCard)(= Transaction2[x] -1)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val T4_cardid 
+:val q
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val HotelSucceeded
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val q
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val HotelSucceeded
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val q
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_4 PayFlight1
+
+:comment T39
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(not (= T4_cardid NULL_CreditCard))(not (= T4_flightstatus FlightSucceeded))(not (= T4_fid NULL_Flight))(= (FlightPrice T4_fid) q)(= Transaction1[x] NULL_CreditCard)(= Transaction2[x] -1)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val T4_cardid 
+:val q
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus
+:val FlightFailed 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val q 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus
+:val FlightFailed
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val q 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_4 PayFlight2
+
+:comment T40
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(not (= T4_cardid NULL_CreditCard))(not (= T4_flightstatus FlightSucceeded))(not (= T4_fid NULL_Flight))(= (FlightPrice T4_fid) q)(= Transaction1[x] NULL_CreditCard)(= Transaction2[x] -1)
+:numcases 2
+:case (= x j)
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val T4_cardid 
+:val q
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus
+:val FlightSucceeded
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val q 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:case
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus
+:val FlightSucceeded
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val q 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_4 FinishPayment1
+
+:comment T41
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(=  T4_flightstatus FlightSucceeded)(= T4_hotelstatus HotelSucceeded)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val Paid
+:val (+ T4_hotelprice T4_flightprice)
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:comment T_4 FinishPayment2
+
+:comment T42
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(not (=  T4_flightstatus FlightSucceeded))(= T4_hotelstatus HotelSucceeded)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val PaymentFailed
+:val T4_amountpaid
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+:comment T_4 FinishPayment3
+
+:comment T43
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(=  T4_flightstatus FlightSucceeded)(not (= T4_hotelstatus HotelSucceeded))
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val PaymentFailed
+:val T4_amountpaid
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+:comment T_4 closing1
+
+:comment T44
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(= T4_status Paid)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+:comment T_4 closing2
+
+:comment T45
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 true)(= actT5 false)(= T4_status PaymentFailed)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status 
+:val actT2 
+:val actT3 
+:val false 
+:val actT5 
+
+
+
+
+
+:comment T_5: HandleError
+
+:comment T_5 opening
+
+:comment T46
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 false)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T3_hid 
+:val T3_fid 
+:val T3_cid 
+:val NULL_String 
+:val actT2 
+:val actT3 
+:val actT4 
+:val true
+
+
+
+
+
+
+
+:comment T_5 HandleFlight1
+
+:comment T47
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 true)(= T5_status NULL_String)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val FlightHandled
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_5 HandleFlight2
+
+:comment T48
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 true)(= T5_status NULL_String)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val NULL_String
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+
+:comment T_5 HandleHotel1
+
+:comment T49
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 true)(= T5_status FlightHandled)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val ErrorHandled
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+:comment T_5 HandleHotel2
+
+:comment T50
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 true)(= T5_status FlightHandled)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val NULL_String
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+
+
+
+:comment T_5 closing
+
+:comment T51
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= actT5 true)(= T5_status ErrorHandled)
+:numcases 1
+:case 
+:val CandidateForCustomer1[j]
+:val CandidateForCustomer2[j]  
+:val Candidate1[j]  
+:val Candidate2[j] 
+:val Record1[j] 
+:val Record2[j]  
+:val Record3[j]  
+:val Record4[j]  
+:val Record5[j] 
+:val Itinerary1[j] 
+:val Itinerary2[j] 
+:val Itinerary3[j] 
+:val Transaction1[j] 
+:val Transaction2[j]
+
+
+:val T1_cid 
+:val T1_cityfrom 
+:val T1_cityto 
+:val T1_hid 
+:val T1_fid 
+:val T1_cardid  
+:val T1_status 
+:val T2_cityfrom 
+:val T2_cityto 
+:val T2_hid 
+:val T2_fid 
+:val T2_status 
+:val T3_cid 
+:val T3_cardid  
+:val T3_hid 
+:val T3_fid 
+:val T3_status 
+:val T3_amountpaid 
+:val T4_inputcardid  
+:val T4_cardid 
+:val T4_hid 
+:val T4_fid 
+:val T4_hotelstatus 
+:val T4_flightstatus 
+:val T4_status 
+:val T4_amountpaid 
+:val T4_hotelprice
+:val T4_flightprice 
+:val T5_hid 
+:val T5_fid 
+:val T5_cid 
+:val T5_status
+:val actT2 
+:val actT3 
+:val actT4 
+:val actT5 
+
+
+

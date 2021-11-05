@@ -1,0 +1,1326 @@
+:comment New-Car-Sales
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type CarModel) 
+:smt (define-type Special) 
+:smt (define-type CreditHistory)
+:smt (define-type Loan)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CarModelName ::(-> CarModel String))
+:smt (define CarModelAvail ::(-> CarModel String))
+:smt (define CarModelStore ::(-> CarModel String))
+:smt (define CarModelPrice ::(-> CarModel int))
+:smt (define SpecialModel ::(-> Special CarModel))
+:smt (define SpecialDisc ::(-> Special int))
+:smt (define CreditHistoryName ::(-> CreditHistory String))
+:smt (define CreditHistoryScore ::(-> CreditHistory int))
+:smt (define LoanLength ::(-> Loan int))
+:smt (define LoanAmount ::(-> Loan int))
+:smt (define LoanInter ::(-> Loan int))
+
+
+
+:smt (define OrderEntered ::String)
+:smt (define Yes ::String)
+:smt (define No ::String)
+:smt (define FactoryOrderSuccessful ::String)
+:smt (define DeliveryReady ::String)
+:smt (define FinancingReady ::String)
+:smt (define ClosedAndDelivered ::String)
+:smt (define FinancingFailed ::String)
+:smt (define RequestSubmitted ::String)
+:smt (define Acceptance ::String)
+:smt (define ClosingDate ::String)
+:smt (define Denial ::String)
+:smt (define CustomerAcceptAlternative ::String)
+:smt (define CarAvailable ::String)
+:smt (define CarUnavailable ::String)
+:smt (define CustomerAccept ::String)
+:smt (define CustomerDecline ::String)
+
+
+:db_driven 
+:db_sorts CarModel Special CreditHistory Loan String
+:db_functions CarModelName CarModelAvail  CarModelStore  CarModelPrice SpecialModel SpecialDisc CreditHistoryName  CreditHistoryScore  LoanLength  LoanAmount  LoanInter
+:db_constants OrderEntered Yes No FactoryOrderSuccessful DeliveryReady FinancingReady ClosedAndDelivered FinancingFailed RequestSubmitted  Acceptance  ClosingDate Denial
+:db_constants CustomerAcceptAlternative  CarAvailable  CarUnavailable  CustomerAccept  CustomerDecline
+:db_relations 
+
+
+
+:global T1_cid CarModel
+:global T1_sid Special
+:global T1_status String
+:global T1_orderfromfactory String
+:global T1_financestatus String
+:global T2_cid CarModel
+:global T2_sid Special
+:global T2_financestatus String
+:global T2_name String
+:global T2_amount int
+:global T2_lid Loan
+:global T2_amountfinanced int
+:global T2_length int
+:global T2_interestrate int
+:global T2_price int
+:global T2_discount int
+:global T2_maxamount int
+:global T3_cid CarModel
+:global T3_newcid CarModel
+:global T3_status String
+:global T3_deliverydate String
+:global T3_newprice int
+:global T3_price int
+:global actT2 bool
+:global actT3 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_cid NULL_CarModel) (=  T1_sid NULL_Special)  (=  T1_status NULL_String) (=   T1_orderfromfactory NULL_String) (= T1_financestatus NULL_String) (=  T2_cid NULL_CarModel) (=  T2_sid NULL_Special) (= T2_financestatus NULL_String) (=  T2_name NULL_String) (=   T2_amount -1) (= T2_lid NULL_Loan)(=   T2_amountfinanced -1)(=   T2_length -1)(=   T2_interestrate -1)(=   T2_price -1)(=   T2_discount -1)(=   T2_maxamount -1)(=  T3_cid NULL_CarModel) (=  T3_newcid NULL_CarModel)(=  T2_sid NULL_Special) (= T3_status NULL_String) (=  T3_deliverydate NULL_String) (=   T3_newprice -1)(=   T3_price -1)(=  actT2 false)(= actT3 false)
+
+:u_cnj (= T1_orderfromfactory No)(= T2_financestatus FinancingReady)
+
+:eevar e CarModel   
+:eevar d Special 
+:eevar f CreditHistory 
+:eevar g Loan
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: Order
+
+:comment T_1 EnterOrder1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_cid NULL_CarModel)(not (= e NULL_CarModel))(not (= d NULL_Special))(= (SpecialModel d) e)
+:numcases 1
+:case 
+
+
+:val e 
+:val d 
+:val OrderEntered 
+:val Yes
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 EnterOrder2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_cid NULL_CarModel)(not (= e NULL_CarModel))
+:numcases 1
+:case 
+
+
+:val e 
+:val NULL_Special 
+:val OrderEntered 
+:val Yes
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+:comment T_1 EnterOrder3
+
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_cid NULL_CarModel)(not (= e NULL_CarModel))(not (= d NULL_Special))(= (SpecialModel d) e)(= (CarModelStore e) Yes)
+:numcases 1
+:case 
+
+
+:val e 
+:val d 
+:val OrderEntered 
+:val No
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 EnterOrder4
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_cid NULL_CarModel)(not (= e NULL_CarModel))(= (CarModelStore e) Yes)
+:numcases 1
+:case 
+
+
+:val e 
+:val NULL_Special 
+:val OrderEntered 
+:val No
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 PrepareDelivery1
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_orderfromfactory No)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val DeliveryReady
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 PrepareDelivery2
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status FactoryOrderSuccessful)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val DeliveryReady
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+
+:comment T_1 CloseOrderAndDelivery
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status DeliveryReady)(= T1_financestatus  FinancingReady)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val ClosedAndDelivered
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+
+
+:comment T_2: Financing
+
+:comment T_2 opening
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status OrderEntered)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T1_cid 
+:val T1_sid 
+:val NULL_String 
+:val NULL_String 
+:val -1 
+:val NULL_Loan
+:val -1
+:val -1
+:val -1
+:val -1
+:val -1
+:val -1 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val true
+:val actT3 
+
+
+
+:comment T_2 CompleteApplication1
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T1_financestatus NULL_String)(not (= g NULL_Loan))(= T2_sid NULL_Special)(not (= T2_cid NULL_CarModel))(> (CarModelPrice T2_cid) 0)(>= (LoanAmount g) (CarModelPrice T2_cid))(>= (LoanInter g) 0)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val RequestSubmitted
+:val T2_name 
+:val (CarModelPrice T2_cid)
+:val g
+:val T2_amountfinanced
+:val (LoanLength  g)
+:val (LoanInter g)
+:val (CarModelPrice T2_cid)
+:val 0 
+:val (LoanAmount g)
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 CompleteApplication2
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T1_financestatus NULL_String)(not (= g NULL_Loan))(not (= T2_cid NULL_CarModel))(not (= T2_sid NULL_Special))(> (CarModelPrice T2_cid) 0)(>= (LoanAmount g) (+ (CarModelPrice T2_cid) (* -1 (SpecialDisc T2_sid))))(>= (LoanInter g) 0)(>= (+ (CarModelPrice T2_cid) (* -1 (SpecialDisc T2_sid))) 0)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val RequestSubmitted
+:val T2_name 
+:val (+ (CarModelPrice T2_cid) (* -1 (SpecialDisc T2_sid)))
+:val g
+:val T2_amountfinanced
+:val (LoanLength  g)
+:val (LoanInter g)
+:val (CarModelPrice T2_cid)
+:val 0 
+:val (LoanAmount g)
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+
+
+:comment T_2 RequestFinancing1
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus RequestSubmitted)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val Acceptance
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 RequestFinancing2
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus RequestSubmitted)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val Denial
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 RequestFinancing3
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus RequestSubmitted)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val FinancingFailed
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 FinancingAvailable
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus Acceptance)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val FinancingReady 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 closing1
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus FinancingReady)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T2_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val false
+:val actT3 
+
+
+
+:comment T_2 closing2
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_financestatus FinancingFailed)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T2_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val false
+:val actT3 
+
+
+
+:comment T_3: FactoryOrder
+
+:comment T_3 opening
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_orderfromfactory Yes)(= T1_status OrderEntered)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T1_cid 
+:val NULL_CarModel
+:val NULL_String 
+:val NULL_String
+:val -1
+:val -1
+:val actT2 
+:val true
+
+
+
+:comment T_3 PlaceFactoryOrder1
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status NULL_String)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarAvailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 PlaceFactoryOrder2
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status NULL_String)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarUnavailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 PlaceFactoryOrder3
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerAcceptAlternative)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarAvailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+:comment T_3 PlaceFactoryOrder4
+
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerAcceptAlternative)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarUnavailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_3 NotifyPromisedDate1
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CarAvailable)(not (= o NULL_String))
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CustomerAccept
+:val o
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_3 NotifyPromisedDate2
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CarAvailable)(not (= o NULL_String))
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CustomerDecline
+:val o
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 OfferAlternatives1
+
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerDecline)(not (= T3_cid NULL_CarModel))(not (= e NULL_CarModel))(= (CarModelAvail  e) Yes)(<= (CarModelPrice e)  (* (+ 1 (/ 1 10)) (CarModelPrice T3_cid)))
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val e 
+:val CustomerAcceptAlternative
+:val T3_deliverydate
+:val (CarModelPrice e)
+:val (CarModelPrice T3_cid)
+:val actT2 
+:val actT3 
+
+
+:comment T_3 OfferAlternatives2
+
+
+:comment T25
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerDecline)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarUnavailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+:comment T_3 OfferAlternatives3
+
+
+:comment T26
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CarUnavailable)(not (= T3_cid NULL_CarModel))(not (= e NULL_CarModel))(= (CarModelAvail  e) Yes)(<= (CarModelPrice e)  (* (+ 1 (/ 1 10)) (CarModelPrice T3_cid)))
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val e 
+:val CustomerAcceptAlternative
+:val T3_deliverydate
+:val (CarModelPrice e)
+:val (CarModelPrice T3_cid)
+:val actT2 
+:val actT3 
+
+
+:comment T_3 OfferAlternatives4
+
+
+:comment T27
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CarUnavailable)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val CarUnavailable
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3 
+
+
+
+
+
+
+:comment T_3 preclosing1
+
+
+:comment T28
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerAccept)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val FactoryOrderSuccessful
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3
+
+
+
+:comment T_3 preclosing2
+
+
+:comment T29
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CustomerAcceptAlternative)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T1_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val FactoryOrderSuccessful 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val actT3
+
+
+:comment T_3 closing1
+
+
+:comment T30
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status FactoryOrderSuccessful)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T3_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val false
+
+
+
+
+:comment T_3 closing2
+
+
+:comment T31
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status CarUnavailable)
+:numcases 1
+:case 
+
+
+:val T1_cid 
+:val T1_sid 
+:val T3_status 
+:val T1_orderfromfactory 
+:val T1_financestatus 
+:val T2_cid 
+:val T2_sid 
+:val T2_financestatus 
+:val T2_name 
+:val T2_amount 
+:val T2_lid 
+:val T2_amountfinanced
+:val T2_length
+:val T2_interestrate
+:val T2_price
+:val T2_discount 
+:val T2_maxamount 
+:val T3_cid 
+:val T3_newcid 
+:val T3_status 
+:val T3_deliverydate
+:val T3_newprice
+:val T3_price
+:val actT2 
+:val false
+
+
+

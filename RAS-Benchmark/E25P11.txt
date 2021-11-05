@@ -1,1275 +1,1831 @@
-:comment Insurance-Claim-Processing
+:comment  Patient-Treatment-Abstract-Process
 
 :index int
 
 
 :comment ----- TYPES DESCLARATIONS -------
 
-:smt (define-type Customer)
-:smt (define-type Policy)
-:smt (define-type BankAcct)
+:smt (define-type Patient) 
+:smt (define-type Doctor) 
+:smt (define-type Sympton)
+:smt (define-type Medicine)
 :smt (define-type String)
 
 :comment ---------- FUNCTIONS and PREDICATES -----------
 
 
-:smt (define CustomerName ::(-> Customer String))
-:smt (define CustomerCredit ::(-> Customer int))
-:smt (define PolicyCoverage ::(-> Policy int))
-:smt (define PolicyType ::(-> Policy String))
-:smt (define PolicyCid ::(-> Policy Customer))
-:smt (define PolicyCredit ::(-> Policy int))
-:smt (define PolicyDeduct ::(-> Policy int))
-:smt (define BankAcctName ::(-> BankAcct String))
-:smt (define BankAcctCid ::(-> BankAcct Customer))
+:smt (define PatName ::(-> Patient String))
+:smt (define PatAddr ::(-> Patient String))
+:smt (define DocName ::(-> Doctor String))
+:smt (define DocS1 ::(-> Doctor Sympton))
+:smt (define DocS2 ::(-> Doctor Sympton))
+:smt (define DocS3 ::(-> Doctor Sympton))
+:smt (define SympName ::(-> Sympton String))
+:smt (define MedG1 ::(-> Medicine Sympton))
+:smt (define MedG2 ::(-> Medicine Sympton))
+:smt (define MedG3 ::(-> Medicine Sympton))
+:smt (define MedB1 ::(-> Medicine Sympton))
+:smt (define MedB2 ::(-> Medicine Sympton))
+:smt (define MedB3 ::(-> Medicine Sympton))
 
 
-
-
+:smt (define No ::String)
+:smt (define Paid ::String)
 :smt (define Init ::String)
-:smt (define PolicyFound ::String)
-:smt (define Accepted ::String)
-:smt (define Rejected ::String)
-:smt (define Closed ::String)
-
-
+:smt (define Yes ::String)
+:smt (define WritingPrescription ::String)
+:smt (define empty ::String)
+:smt (define nonempty ::String)
+:smt (define TakingMedicine ::String)
+:smt (define Zero ::String)
+:smt (define One ::String)
 
 :db_driven 
-:db_sorts Customer Policy BankAcct String
-:db_functions CustomerName CustomerCredit PolicyCoverage PolicyType PolicyCid PolicyCredit PolicyDeduct BankAcctName BankAcctCid 
-:db_constants  Init  PolicyFound  Accepted  Rejected  Closed
-:db_relations 
+:db_sorts Patient Doctor Sympton Medicine String 
+:db_functions PatName PatAddr DocName DocS1 DocS2 DocS3 
+:db_functions SympName MedG1 MedG2 MedG3 MedB1 MedB2 MedB3
+:db_constants No Paid Init Yes WritingPrescription empty nonempty TakingMedicine Zero One
+:db_relations
 
-:local Claims1  Customer
-:local Claims2  String
-:local Claims3  String
-:local Claims4  int
+:local Request Patient
+:local AvailableDoctor Doctor
+:local Symptons1 Sympton
+:local Symptons2 Sympton
+:local Symptons3 Sympton
+:local Prescription Medicine
 
-
-
+:global T1_pid Patient
+:global T1_did Doctor
 :global T1_status String
-:global T1_cid Customer
-:global T1_claimname String
-:global T1_type String
-:global T1_amount int
-:global T1_pid Policy
-:global T2_cid Customer
-:global T2_pid Policy
-:global T2_claimname String
-:global T2_type String
-:global T2_amount int
+:global T2_pid Patient
+:global T2_did Doctor
+:global T2_s1 Sympton
+:global T2_s2 Sympton
+:global T2_s3 Sympton
 :global T2_status String
-:global T2_creditscore int
-:global T2_coverage int
-:global T2_requiredcredit int
-:global T3_cid Customer
-:global T3_pid Policy
-:global T3_amount int
+:global T3_s1 Sympton
+:global T3_s2 Sympton
+:global T3_s3 Sympton
+:global T3_mid Medicine
 :global T3_status String
-:global T3_aid BankAcct
-:global T3_amountpaid int
-:global T3_deductible int
+:global T3_med_status String
+:global T3_has_good String
+:global T3_has_bad String
 :global actT2 bool
 :global actT3 bool
-:global C int
-:global D int
-:global E int
-:global F int
-:global G int
 
 
 
+:smt (define (Guardia1 T2did::Doctor s1::Sympton s2::Sympton s3::Sympton T2status::String A::String B::String)::bool(or(and (not (= s1 NULL_Sympton))(=> (or (= (DocS1 T2did) s1)(= (DocS1 T2did) s2)(= (DocS1 T2did) s3)(= (DocS2 T2did) s1)(= (DocS2 T2did) s2)(= (DocS2 T2did) s3)(= (DocS3 T2did) s1)(= (DocS3 T2did) s2)(= (DocS3 T2did) s3)) (= T2status A)))(= T2status B)))
+
+:smt (define (Guardia2 T3mid::Medicine s1::Sympton s2::Sympton s3::Sympton T3has::String A::String B::String )::bool(or(and (not (= s1 NULL_Sympton))(=> (or (= (MedG1 T3mid) s1)(= (MedG1 T3mid) s2)(= (MedG1 T3mid) s3)(= (MedG2 T3mid) s1)(= (MedG2 T3mid) s2)(= (MedG2 T3mid) s3)(= (MedG3 T3mid) s1)(= (MedG3 T3mid) s2)(= (MedG3 T3mid) s3)) (= T3has A)))(= T3has B)))
+
+:smt (define (Guardia3 T3mid::Medicine s1::Sympton s2::Sympton s3::Sympton T3has::String A::String B::String)::bool(or(and (not (= s1 NULL_Sympton))(=> (or (= (MedB1 T3mid) s1)(= (MedB1 T3mid) s2)(= (MedB1 T3mid) s3)(= (MedB2 T3mid) s1)(= (MedB2 T3mid) s2)(= (MedB2 T3mid) s3)(= (MedB3 T3mid) s1)(= (MedB3 T3mid) s2)(= (MedB3 T3mid) s3)) (= T3has A)))(= T3has B)))
 
 :initial
 :var x
-:cnj (= T1_status NULL_String)(=  T1_cid NULL_Customer)(= T1_claimname NULL_String)(= T1_type NULL_String)(= T1_amount -1)(= T1_pid NULL_Policy)(= T2_cid NULL_Customer)(= T2_pid NULL_Policy)(= T2_claimname NULL_String)(= T2_type NULL_String)(= T2_amount -1)(= T2_status NULL_String)(=  T2_creditscore -1)(= T2_coverage -1)(= T2_requiredcredit -1)(= T3_cid NULL_Customer)(= T3_pid NULL_Policy)(= T3_amount -1)(= T3_status NULL_String)(= T3_aid NULL_BankAcct)(= T3_amountpaid -1)(= T3_deductible -1)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)(=  actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)
+:cnj (=  T1_pid  NULL_Patient) (=  T1_did NULL_Doctor) (=  T1_status  NULL_String) (=  T2_pid  NULL_Patient) (=  T2_did NULL_Doctor) (=  T2_s1 NULL_Sympton) (= T2_s2 NULL_Sympton)(=  T2_s3 NULL_Sympton) (= T2_status NULL_String)(= T3_s1 NULL_Sympton)(= T3_s2 NULL_Sympton)(= T3_s3 NULL_Sympton)(= T3_mid NULL_Medicine)(= T3_med_status NULL_String)(= T3_status NULL_String)(= T3_has_good NULL_String)(= T3_has_bad NULL_String)(= Request[x] NULL_Patient)(= AvailableDoctor[x] NULL_Doctor)(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)(= Prescription[x] NULL_Medicine)(= actT2 false)(= actT3 false)
 
-:u_cnj (= T1_status Closed)(< T2_coverage T2_amount)
+:u_cnj (= actT2 true)
 
-:eevar e Customer     
-:eevar d Policy
-:eevar f BankAcct
-:eevar g String
+:eevar e Patient
+:eevar d Doctor
+:eevar f String
+:eevar h String
 :eevar l String
-:eevar m String
-:eevar n String
-:eevar o String
-:eevar p String
-:eevar q int
+:eevar g Medicine
+:eevar m Sympton
+:eevar n Sympton
+:eevar o Sympton
 
 
-:comment T_1: Insurance
+:comment T_1: MakeAppointment
 
-:comment T_1 AddNewClaim1
-
+:comment T_1 EnterPatientInfo
 
 :comment T1
 :transition
 :var j
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= m NULL_String))(not (= n NULL_String))(not (= e NULL_Customer))
+:guard  (= actT2 false)(= actT3 false)(not (= e NULL_Patient))
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val e 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val e 
-:val m
-:val n 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val 1
-:val D
-:val E
-:val F
-:val G
-
-
-:comment T_1 AddNewClaim2
-
+:comment T_1 AddRequest
 
 :comment T2
 :transition
-:var j
 :var x
-:guard  (= actT2 false)(= actT3 false)(= C 1)(= D 0)(= E 0)(= F 0)(= G 0)(> q 0)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)
+:var j
+:guard  (= actT2 false)(= actT3 false)(= Request[x] NULL_Patient)(not (= d NULL_Doctor))(not (= f NULL_String))
+:uguard (not (= Request[j] T1_pid))
 :numcases 2
-:case (= x j)
-:val T1_cid
-:val T1_claimname 
-:val T1_type 
-:val q  
+:case (= j x)
+ :val T1_pid
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val q
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val 0
-:val D
-:val E
-:val F
-:val G
-
-
+ :val NULL_Patient
+ :val d
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val q
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val 0
-:val D
-:val E
-:val F
-:val G
-
-
-:comment T_1 InsertClaim1
-
-
+ :val NULL_Patient
+ :val d
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
 :comment T3
 :transition
-:var j
 :var x
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T1_cid NULL_Customer))(not (= T1_claimname NULL_String))(not (= T1_type NULL_String))(> T1_amount 0)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)
+:var j
+:guard  (= actT2 false)(= actT3 false)(= Request[x] NULL_Patient)
+:uguard (not (= Request[j] T1_pid))
 :numcases 2
-:case (= x j)
-:val T1_cid  
-:val T1_claimname 
-:val T1_type 
-:val T1_amount  
+:case (= j x)
+ :val T1_pid
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
+ :val NULL_Patient
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val NULL_Patient
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-
-:comment T_1 UpdateClaim1
-
-
-:comment T4
+ 
+ :comment T_1 RetrieveRequest
+ 
+ :comment T4
 :transition
-:var j
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T1_status Init))(not (= e NULL_Customer))(not (= m NULL_String))(not (= n NULL_String))
-:numcases 1
-:case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
-
-
-
-:val T1_status 
-:val e 
-:val m
-:val n
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val 1
-:val E
-:val F
-:val G
-
-
-
-
-:comment T_1  UpdateClaim2
-
-
-:comment T5
-:transition
-:var j
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 1)(= E 0)(= F 0)(= G 0)(> q 0)
-:numcases 1
-:case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
-
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val q
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val 0
-:val E
-:val F
-:val G
-
-
-
-:comment T_1 RetrieveClaim
-
-
-:comment T6
-:transition
-:var j
 :var x
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= Claims1[x]   NULL_Customer))(not (= Claims2[x]   NULL_String))(not (= Claims3[x]   NULL_String))(> Claims4[x]   -1)
+:var j
+:guard  (= actT2 false)(= actT3 false)(not (= Request[x] NULL_Patient))(not (= d NULL_Doctor))(not (= f NULL_String))
 :numcases 2
-:case (= x j)
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+:case (= j x)
+ :val NULL_Patient
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val Request[x]
+ :val d
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val Request[x]
+ :val d
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+ :comment T5
+:transition
+:var x
+:var j
+:guard  (= actT2 false)(= actT3 false)(not (= Request[x] NULL_Patient))
+:numcases 2
+:case (= j x)
+ :val NULL_Patient
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-:val Init
-:val Claims1[x]  
-:val Claims2[x]
-:val Claims3[x] 
-:val Claims4[x]
-:val NULL_Policy 
-:val T2_cid 
-:val T2_pid
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
+ :val Request[x]
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
-
-
-
-:val Init
-:val Claims1[x]  
-:val Claims2[x]
-:val Claims3[x] 
-:val Claims4[x]
-:val NULL_Policy 
-:val T2_cid 
-:val T2_pid
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-
-:comment T_2: Review
-
-:comment T_2 opening
-
-
-:comment T7
+ :val Request[x]
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+ :comment T_1 EnterDoctorInfo
+ :comment T6
 :transition
 :var j
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T1_status Init)
+:guard  (= actT2 false)(= actT3 false)(not (= d NULL_Doctor))
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T1_cid 
-:val NULL_Policy
-:val T1_claimname 
-:val T1_type 
-:val T1_amount 
-:val NULL_String
-:val -1 
-:val -1 
-:val -1
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val true
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-
-:comment T_2 GetPolicy
-
-
-:comment T8
+ :val T1_pid
+ :val d
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+  :comment T_1 AddDoctor
+ :comment T7
 :transition
+:var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T2_cid NULL_Customer))(not (= d NULL_Policy))(= (PolicyCid d) T2_cid)
-:numcases 1
+:guard  (= actT2 false)(= actT3 false)(not (= T1_did NULL_Doctor))(= AvailableDoctor[x] NULL_Doctor)(not (= e NULL_Patient))(not (= f NULL_String))
+:uguard (not (= AvailableDoctor[j] T1_did))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val T1_did
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val e
+ :val NULL_Doctor
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val e
+ :val NULL_Doctor
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val d 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val PolicyFound
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-
-:comment T_2 CheckPolicy1
-
-
-:comment T9
+ 
+ 
+ :comment T8
 :transition
+:var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T2_status PolicyFound)(not (= T2_cid NULL_Customer))(= (CustomerCredit T2_cid) q)(>= q 400)
-:numcases 1
+:guard  (= actT2 false)(= actT3 false)(not (= T1_did NULL_Doctor))(= AvailableDoctor[x] NULL_Doctor)
+:uguard (not (= AvailableDoctor[j] T1_did))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val T1_did
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val NULL_Patient
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val q
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val 1
-:val F
-:val G
-
-
-:comment T_2 CheckPolicy2
-
-
-:comment T10
+ :val NULL_Patient
+ :val NULL_Doctor
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+   :comment T_1 RetrieveDoctor
+ :comment T9
 :transition
+:var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 1)(= F 0)(= G 0)(not (= T2_pid NULL_Policy))(= (PolicyCoverage T2_pid) q)(>= q T2_amount)(= (PolicyType T2_pid) T2_type)(= (PolicyCid T2_pid) T2_cid)
-:numcases 1
+:guard  (= actT2 false)(= actT3 false)(not (= AvailableDoctor[x] NULL_Doctor))(not (= e NULL_Patient))(not (= f NULL_String))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val NULL_Doctor
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val e
+ :val AvailableDoctor[x]
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val e
+ :val AvailableDoctor[x]
+ :val f
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val q 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val 2
-:val F
-:val G
-
-
-
-:comment T_2 CheckPolicy3
-
-
-:comment T11
+ :comment T10
 :transition
+:var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 2)(= F 0)(= G 0)(= (PolicyCredit T2_pid) q)(>= T2_creditscore q)
+:guard  (= actT2 false)(= actT3 false)(not (= AvailableDoctor[x] NULL_Doctor))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val NULL_Doctor
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val NULL_Patient
+ :val AvailableDoctor[x]
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val NULL_Patient
+ :val AvailableDoctor[x]
+ :val NULL_String
+ :val T2_pid 
+ :val T2_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+ 
+ :comment T_2: SeeDoctor
+ 
+ :comment T_2 opening
+ :comment T11
+ :transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(not (= T1_pid NULL_Patient))(not (= T1_did NULL_Doctor))
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val Accepted
-:val T2_creditscore 
-:val T2_coverage 
-:val q 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val 0
-:val F
-:val G
-
-
-:comment T_2 RejectPolicy1
-
-
-:comment T12
-:transition
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_String
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val true 
+ :val actT3
+ 
+ 
+ :comment T_2 AddSympton
+ :comment T12
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T2_status PolicyFound)(not (= T2_cid NULL_Customer))(= (CustomerCredit T2_cid) q)
-:numcases 1
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s1 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val m
+ :val n
+ :val o
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val m
+ :val n
+ :val o
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val q 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val 1
-:val G
-
-
-:comment T_2 RejectPolicy2
-
-
-:comment T13
-:transition
+ :comment T13
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 1)(= G 0)(not (= T2_pid NULL_Policy))(= (PolicyCoverage T2_pid) q)(= (PolicyType T2_pid) T2_type)(= (PolicyCid T2_pid) T2_cid)
-:numcases 1
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s1 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val q
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val 2
-:val G
-
-
-:comment T_2 RejectPolicy3
-
-
-:comment T14
-:transition
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+  
+ :comment T14
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 2)(= G 0)(= (PolicyCredit T2_pid) q)
-:numcases 1
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s2 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))(not (= m NULL_Sympton))(not (= n NULL_Sympton))(not (= o NULL_Sympton))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val m
+ :val n
+ :val o 
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val q 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val 3
-:val G
-
-
-:comment T_2 RejectPolicy4
-
-
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val m 
+ :val n
+ :val o
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
 :comment T15
-:transition
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 3)(= G 0)(<= T2_coverage T2_amount)
-:numcases 1
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s2 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val Rejected
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val 0
-:val G
-
-
-:comment T_2 RejectPolicy5
-
-
-:comment T16
-:transition
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+  :comment T16
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 3)(= G 0)(< T2_creditscore T2_requiredcredit)
-:numcases 1
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s3 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val m
+ :val n
+ :val o
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val Rejected
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val 0
-:val G
-
-
-
-:comment T_2 closing
-
-
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val m
+ :val n
+ :val o
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
 :comment T17
-:transition
+ :transition
+ :var x
 :var j
-:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T2_status PolicyFound))(not (= T2_status NULL_String))
+:guard  (= actT2 true)(= actT3 false)(not (= T2_s3 NULL_Sympton))(= Symptons1[x] NULL_Sympton)(= Symptons2[x] NULL_Sympton)(= Symptons3[x] NULL_Sympton)
+:uguard (not (= Symptons1[x] T2_s1))(not (= Symptons2[x] T2_s2))(not (= Symptons3[x] T2_s3))(not (= m NULL_Sympton))(not (= n NULL_Sympton))(not (= o NULL_Sympton))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val T2_s1
+ :val T2_s2
+ :val T2_s3
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Init
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+ :comment T_2 CheckSympton
+   :comment T18
+ :transition
+ :var x
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status Init)(not (= Symptons1[x] NULL_Sympton))(not (= Symptons2[x] NULL_Sympton))(not (= Symptons3[x] NULL_Sympton)) 
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val Symptons1[x]
+ :val Symptons2[x]
+ :val Symptons3[x]
+ :val Yes
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val Symptons1[x] 
+ :val Symptons2[x]
+ :val Symptons3[x]
+ :val Yes
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+
+   :comment T19
+ :transition
+ :var x
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status Init)(not (= Symptons1[x] NULL_Sympton))(not (= Symptons2[x] NULL_Sympton))(not (= Symptons3[x] NULL_Sympton)) 
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T2_pid 
+ :val T2_did 
+ :val Symptons1[x]
+ :val Symptons2[x]
+ :val Symptons3[x]
+ :val No
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid 
+ :val T1_did 
+ :val T1_status 
+ :val T2_pid 
+ :val T2_did
+ :val Symptons1[x] 
+ :val Symptons2[x]
+ :val Symptons3[x]
+ :val No
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
+ 
+  :comment T_2 closing
+ :comment T20
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status No)
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Prescription[j]
 
-
-
-:val T2_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T2_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val false
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-:comment T_3: Payment
-
-
-:comment T_3 opening
-
-
-:comment T18
-:transition
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val false 
+ :val actT3
+ 
+ :comment T21
+ :transition
 :var j
-:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T1_status Accepted)
+:guard  (= actT2 true)(= actT3 false)(= T2_status Paid)
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val NULL_Sympton
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T1_cid
-:val T1_pid 
-:val T1_amount 
-:val NULL_String 
-:val NULL_BankAcct
-:val -1
-:val -1 
-:val actT2 
-:val true
-:val C
-:val D
-:val E
-:val F
-:val G
-
-
-
-:comment T_3 Pay1
-
-
-:comment T19
-:transition
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val T3_status 
+ :val T3_med_status 
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val false 
+ :val actT3
+ 
+ :comment T_3: TakeMedicine
+ 
+ :comment T_3 opening
+  :comment T22
+ :transition
 :var j
-:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(>= q 0)(= (PolicyDeduct T3_pid) q)
+:guard  (= actT2 true)(= actT3 false)(= T2_status Yes)
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val q 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val 1
-
-:comment T_3 Pay2
-
-
-:comment T20
-:transition
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val NULL_Medicine
+ :val NULL_String
+ :val NULL_String
+ :val NULL_String 
+ :val NULL_String
+ :val actT2 
+ :val true
+ 
+ 
+  :comment T_3 StartPrescription
+  :comment T23
+ :transition
 :var j
-:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 1)(= q (+ T3_amount (* -1 T3_deductible)))
+:guard  (= actT2 true)(= actT3 true)
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val WritingPrescription 
+ :val empty
+ :val T3_has_good 
+ :val T3_has_bad 
+ :val actT2 
+ :val actT3
 
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val q
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val 2
-
-
-
-:comment T_3 Pay3
-
-
-:comment T21
-:transition
+  :comment T_3 AddMedicine
+  :comment T24
+ :transition
+ :var x
 :var j
-:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 2)(not (= f NULL_BankAcct))
+:guard  (= actT2 true)(= actT3 true)(not (= T3_mid NULL_Medicine))(not (= g NULL_Medicine))(= Prescription[x] NULL_Medicine)
+:uguard (not (= Prescription[j] T3_mid))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val T3_mid
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val g
+ :val WritingPrescription
+ :val nonempty
+ :val f
+ :val h
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val g
+ :val WritingPrescription
+ :val nonempty
+ :val f
+ :val h
+ :val actT2 
+ :val actT3
+
+  :comment T25
+ :transition
+ :var x
+:var j
+:guard  (= actT2 true)(= actT3 true)(not (= T3_mid NULL_Medicine))(not (= g NULL_Medicine))(= Prescription[x] NULL_Medicine)
+:uguard (not (= Prescription[j] T3_mid))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val T3_mid
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val g
+ :val WritingPrescription
+ :val nonempty
+ :val NULL_String
+ :val NULL_String
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val g
+ :val WritingPrescription
+ :val nonempty
+ :val NULL_String
+ :val NULL_String
+ :val actT2 
+ :val actT3
+
+  :comment T_3 FinishPrescription
+  :comment T26
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status WritingPrescription)(= T3_med_status nonempty)
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-
-
-:val T1_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val Closed 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val actT3 
-:val C
-:val D
-:val E
-:val F
-:val 0
-
-
-
-
-
-
-
-:comment T_3 closing
-
-
-:comment T22
-:transition
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid 
+ :val TakingMedicine 
+ :val T3_med_status
+ :val Zero
+ :val Zero
+ :val actT2 
+ :val actT3
+ 
+  :comment T_3 Checkout
+  :comment T27
+ :transition
+ :var x
 :var j
-:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T3_status Closed)(>= T3_amountpaid)
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(not (= Prescription[x] NULL_Medicine))(not (= f NULL_String))(not (= h NULL_String))(not (= l NULL_String))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val NULL_Medicine
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val Prescription[x]
+ :val TakingMedicine
+ :val f
+ :val h
+ :val l
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val Prescription[x]
+ :val TakingMedicine
+ :val f
+ :val h
+ :val l
+ :val actT2 
+ :val actT3
+
+  :comment T28
+ :transition
+ :var x
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(not (= Prescription[x] NULL_Medicine))
+:numcases 2
+:case (= j x)
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val NULL_Medicine
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val Prescription[x]
+ :val TakingMedicine
+ :val NULL_String
+ :val NULL_String
+ :val NULL_String
+ :val actT2 
+ :val actT3
+:case
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val Prescription[x]
+ :val TakingMedicine
+ :val NULL_String
+ :val NULL_String
+ :val NULL_String
+ :val actT2 
+ :val actT3
+ 
+  :comment T_3 UpdateCheckoutStatus1
+  :comment T29
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(= T3_has_good Zero)(Guardia2 T3_mid T3_s1 T3_s2 T3_s3 f One Zero)(not (= f NULL_String))
 :numcases 1
 :case 
-:val Claims1[j]  
-:val Claims2[j]  
-:val Claims3[j]  
-:val Claims4[j]  
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val T3_status
+ :val T3_med_status 
+ :val f
+ :val T3_has_bad
+ :val actT2 
+ :val actT3
 
+ :comment T30
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(= T3_has_good Zero)(Guardia2 T3_mid T3_s1 T3_s2 T3_s3 f One Zero)
+:numcases 1
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
 
-:val T3_status 
-:val T1_cid 
-:val T1_claimname
-:val T1_type 
-:val T1_amount 
-:val T1_pid 
-:val T2_cid 
-:val T2_pid 
-:val T2_claimname 
-:val T2_type 
-:val T2_amount 
-:val T2_status 
-:val T2_creditscore 
-:val T2_coverage 
-:val T2_requiredcredit 
-:val T3_cid
-:val T3_pid 
-:val T3_amount 
-:val T3_status 
-:val T3_aid 
-:val T3_amountpaid 
-:val T3_deductible 
-:val actT2 
-:val false
-:val C
-:val D
-:val E
-:val F
-:val G
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val T3_status
+ :val T3_med_status 
+ :val NULL_String
+ :val T3_has_bad
+ :val actT2 
+ :val actT3
+ 
+  :comment T_3 UpdateCheckoutStatus2
+  :comment T31
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(= T3_has_bad Zero)(Guardia3 T3_mid T3_s1 T3_s2 T3_s3 f One Zero)(not (= f NULL_String))
+:numcases 1
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val T3_status
+ :val T3_med_status 
+ :val T3_has_good
+ :val f
+ :val actT2 
+ :val actT3
+
+  :comment T32
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(= T3_has_bad Zero)(Guardia3 T3_mid T3_s1 T3_s2 T3_s3 f One Zero)
+:numcases 1
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val T3_status
+ :val T3_med_status 
+ :val T3_has_good
+ :val NULL_String
+ :val actT2 
+ :val actT3
+ 
+ 
+   :comment T_3 UpdateCheckoutStatus3
+  :comment T33
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status TakingMedicine)(= T3_has_bad Zero)(= T3_has_good One)
+:numcases 1
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T2_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val Paid
+ :val T3_med_status 
+ :val T3_has_good
+ :val T3_has_bad
+ :val actT2 
+ :val actT3
+ 
+ 
+    :comment T_3 closing
+  :comment T34
+ :transition
+:var j
+:guard  (= actT2 true)(= actT3 true)(= T3_status Paid)
+:numcases 1
+:case 
+ :val Request[j]
+ :val AvailableDoctor[j]
+ :val Symptons1[j]
+ :val Symptons2[j]
+ :val Symptons3[j]
+ :val Prescription[j]
+
+ :val T1_pid
+ :val T1_did
+ :val T1_status
+ :val T1_pid 
+ :val T1_did 
+ :val T2_s1 
+ :val T2_s2 
+ :val T2_s3 
+ :val T3_status 
+ :val T3_s1 
+ :val T3_s2 
+ :val T3_s3 
+ :val T3_mid
+ :val T3_status
+ :val T3_med_status 
+ :val T3_has_good
+ :val T3_has_bad
+ :val actT2 
+ :val false
+ 

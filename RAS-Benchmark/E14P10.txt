@@ -1,0 +1,913 @@
+:comment Incident-Management-as-Detailed-Collaboration
+
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type ProblemType) 
+:smt (define-type SupportAgent)
+:smt (define-type Num)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+
+:smt (define CustName ::(-> Customer String))
+:smt (define CustIsVip ::(-> Customer String))
+:smt (define ProbType ::(-> ProblemType String))
+:smt (define ProbImp::(-> ProblemType String))
+:smt (define SuppIsDevelop::(-> SupportAgent String))
+:smt (define SuppLevel ::(-> SupportAgent int))
+:smt (define SuppProb ::(-> SupportAgent ProblemType))
+
+
+:smt (define yes ::String)
+:smt (define ProblemReceived ::String)
+:smt (define low ::String)
+:smt (define Solved ::String)
+:smt (define No ::String)
+:smt (define Handling ::String)
+:smt (define Unsolved ::String)
+
+:db_driven 
+:db_sorts Customer ProblemType SupportAgent Num String 
+:db_functions CustName CustIsVip ProbType ProbImp SuppIsDevelop SuppLevel SuppProb  
+:db_constants  yes ProblemReceived low Solved No Handling Unsolved
+:db_relations 
+
+:local Log1 String
+:local Log2 ProblemType
+:local Log3 String
+
+
+:global T1_problem String
+:global T1_cid Customer
+:global T1_pid ProblemType
+:global T1_status String
+:global T1_solution String
+:global T2_problem String
+:global T2_pid ProblemType
+:global T2_status String
+:global T2_solution String
+:global T2_aid SupportAgent
+:global T3_problem String
+:global T3_pid ProblemType
+:global T3_status String
+:global T3_solution String
+:global T3_aid SupportAgent
+:global T4_problem String
+:global T4_pid ProblemType
+:global T4_status String
+:global T4_solution String
+:global T4_aid SupportAgent
+:global actT2 bool
+:global actT3 bool
+:global actT4 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_problem NULL_String) (=  T1_cid NULL_Customer) (=  T1_pid NULL_ProblemType) (=  T1_status  NULL_String) (=  T1_solution NULL_String) (=  T2_problem NULL_String) (= T2_pid NULL_ProblemType)(= T2_status NULL_String)(= T2_solution NULL_String)(= T2_aid NULL_SupportAgent)(= T3_problem NULL_String)(= T3_pid NULL_ProblemType)(= T3_status NULL_String)(= T3_solution NULL_String)(= T3_aid NULL_SupportAgent)(= T4_problem NULL_String)(= T4_pid NULL_ProblemType)(= T4_status NULL_String)(= T4_solution NULL_String)(= T4_aid NULL_SupportAgent)(=  actT2 false)(= actT3 false)(= actT4 false)
+
+:u_cnj  (= T3_status Unsolved)(not (= e NULL_Customer))(= (CustIsVip e) yes)
+
+:eevar e Customer
+:eevar d ProblemType
+:eevar f SupportAgent
+:eevar g String
+:eevar l String
+:eevar m String
+:eevar n String
+
+
+:comment T_1: KeyAccountManager
+
+:comment T_1 GetProblemDescription
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(not (= g NULL_String))(not (= e NULL_Customer))(= (CustIsVip e) yes)(not (= d NULL_ProblemType))
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j] 
+ :val Log3[j]
+
+ :val g
+ :val e
+ :val d
+ :val ProblemReceived
+ :val NULL_String
+ :val T2_problem 
+ :val T2_pid 
+ :val T2_status 
+ :val T2_solution 
+ :val T2_aid 
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4 
+
+:comment T_1 HandleProblem
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(not (= T1_pid NULL_ProblemType))(= (ProbImp T1_pid) low)(= T1_status ProblemReceived)(not (= g NULL_String))
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status 
+ :val g
+ :val T2_problem 
+ :val T2_pid 
+ :val T2_status 
+ :val T2_solution 
+ :val T2_aid 
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4 
+ 
+ :comment T_1 ExplainSolution
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status ProblemReceived)(not (= T1_solution NULL_String))
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val Solved 
+ :val T1_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val T2_status 
+ :val T2_solution 
+ :val T2_aid 
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4
+
+ 
+  :comment T_2: FirstLevelSupport
+  
+  :comment T_2 opening 
+  
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status ProblemReceived)(= T1_solution NULL_String)
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status  
+ :val T1_solution
+ :val T1_problem 
+ :val T1_pid 
+ :val NULL_String
+ :val NULL_String
+ :val NULL_SupportAgent
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val true
+ :val actT3 
+ :val actT4
+
+
+   :comment T_2 FindAgent
+  
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(not (= f NULL_SupportAgent))(= (SuppIsDevelop f) No)(= (SuppLevel f) 1)(= (SuppProb f) T2_pid)
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status  
+ :val T1_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val Handling
+ :val T2_solution
+ :val f
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4
+ 
+ 
+ :comment T_2 HandleProblem1
+ 
+:comment T6
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Handling)(not (= g NULL_String))
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status 
+ :val T1_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val Solved
+ :val g
+ :val T2_aid
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4
+ 
+ 
+:comment T7
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Handling)
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status 
+ :val T1_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val Unsolved
+ :val NULL_String
+ :val T2_aid
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val actT3 
+ :val actT4
+ 
+ :comment T_2 closing
+ 
+ :comment T8
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Solved)(not (= T2_solution NULL_String))
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status 
+ :val T2_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val T2_status
+ :val T2_solution
+ :val T2_aid
+ :val T3_problem 
+ :val T3_pid 
+ :val T3_status 
+ :val T3_solution 
+ :val T3_aid 
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val false
+ :val actT3 
+ :val actT4
+ 
+ :comment T_3: SecondLevelSupport
+ 
+ :comment T_3 opening 
+ 
+  
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Unsolved)(= T2_solution NULL_String)
+:numcases 1
+:case 
+ :val Log1[j] 
+ :val Log2[j]
+ :val Log3[j] 
+
+ :val T1_problem
+ :val T1_cid 
+ :val T1_pid
+ :val T1_status 
+ :val T1_solution
+ :val T2_problem 
+ :val T2_pid 
+ :val T2_status
+ :val T2_solution
+ :val T2_aid
+ :val T2_problem 
+ :val T2_pid 
+ :val NULL_String
+ :val NULL_String
+ :val NULL_SupportAgent
+ :val T4_problem 
+ :val T4_pid 
+ :val T4_status 
+ :val T4_solution 
+ :val T4_aid 
+ :val actT2
+ :val true
+ :val actT4
+ 
+ 
+ :comment T_3 FindAgent
+ 
+ :comment T10
+ :transition
+ :var j
+ :guard  (= actT2 true)(= actT3 true)(= actT4 false)(not (= f NULL_SupportAgent))(= (SuppIsDevelop f) No)(= (SuppLevel f) 2)(= (SuppProb f) T3_pid)
+ :numcases 1
+ :case 
+  :val Log1[j] 
+  :val Log2[j]
+  :val Log3[j] 
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid
+  :val T1_status 
+  :val T1_solution
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status
+  :val T2_solution
+  :val T2_aid
+  :val T3_problem 
+  :val T3_pid 
+  :val Handling 
+  :val T3_solution 
+  :val f
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+ 
+ :comment T_3 HandleProblem2
+ 
+  :comment T11
+ :transition
+ :var j
+ :guard  (= actT2 true)(= actT3 true)(= actT4 false)(= T3_status Handling)(not (= g NULL_String))
+ :numcases 1
+ :case 
+  :val Log1[j] 
+  :val Log2[j]
+  :val Log3[j] 
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid
+  :val T1_status  
+  :val T1_solution
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status
+  :val T2_solution
+  :val T2_aid
+  :val T3_problem 
+  :val T3_pid 
+  :val Solved
+  :val g
+  :val T3_aid 
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+ 
+ 
+ :comment T12
+ :transition
+ :var j
+ :guard  (= actT2 true)(= actT3 true)(= actT4 false)(= T3_status Handling)
+ :numcases 1
+ :case 
+  :val Log1[j] 
+  :val Log2[j]
+  :val Log3[j] 
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid
+  :val T1_status 
+  :val T1_solution
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status
+  :val T2_solution
+  :val T2_aid
+  :val T3_problem 
+  :val T3_pid 
+  :val Unsolved
+  :val NULL_String
+  :val T3_aid 
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+  
+  :comment T_3 InsertIntoProductBacklog
+  
+  :comment T13
+  :transition
+  :var x
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 false)(not (= T3_solution NULL_String))(= Log1[x] NULL_String)(= Log2[x] NULL_ProblemType)(= Log3[x] NULL_String)
+  :uguard (not (= Log1[j] T3_problem))(not (= Log2[j] T3_pid))(not (= Log3[j] T3_solution))
+  :numcases 2
+  :case (= j x)
+  :val T3_problem
+  :val T3_pid
+  :val T3_solution
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val g 
+  :val d 
+  :val Solved
+  :val m
+  :val f 
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4 
+ :case 
+  :val Log1[j]
+  :val Log2[j]
+  :val Log3[j]
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val g
+  :val d 
+  :val Solved
+  :val m
+  :val f
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+ 
+  :comment T_3 RetrieveProblemSolution
+  
+  :comment T14
+  :transition
+  :var x
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 false)(not (= Log1[x] NULL_String))(not (= Log2[x] NULL_ProblemType))(not (= Log3[x] NULL_String))
+  :numcases 2
+  :case (= j x)
+  :val NULL_String
+  :val NULL_ProblemType
+  :val NULL_String
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val Log1[x]
+  :val Log2[x]
+  :val Solved
+  :val Log3[x]
+  :val f
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4 
+ :case 
+  :val Log1[j]
+  :val Log2[j]
+  :val Log3[j]
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val Log1[x]
+  :val Log2[x]
+  :val Solved
+  :val Log3[x]
+  :val f
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+
+ :comment T15
+  :transition
+  :var x
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 false)(not (= Log1[x] NULL_String))(not (= Log2[x] NULL_ProblemType))(not (= Log3[x] NULL_String))
+  :numcases 2
+  :case (= j x)
+  :val NULL_String
+  :val NULL_ProblemType
+  :val NULL_String
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val Log1[x]
+  :val Log2[x]
+  :val Solved
+  :val Log3[x]
+  :val NULL_SupportAgent
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4 
+ :case 
+  :val Log1[j]
+  :val Log2[j]
+  :val Log3[j]
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid 
+  :val T1_status 
+  :val T1_solution 
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status 
+  :val T2_solution 
+  :val T2_aid 
+  :val Log1[x]
+  :val Log2[x]
+  :val Solved
+  :val Log3[x]
+  :val NULL_SupportAgent
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val actT3 
+  :val actT4
+ 
+ 
+  :comment T_3 closing
+ 
+  
+ :comment T16
+ :transition
+ :var j
+ :guard  (= actT2 true)(= actT3 true)(= actT4 false)(= T3_status Solved)(not (= T3_solution NULL_String))
+ :numcases 1
+ :case 
+  :val NULL_String
+  :val NULL_ProblemType
+  :val NULL_String 
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid
+  :val T1_status  
+  :val T3_solution
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status
+  :val T3_solution
+  :val T2_aid
+  :val T3_problem 
+  :val T3_pid 
+  :val T3_status
+  :val T3_solution
+  :val T3_aid
+  :val T4_problem 
+  :val T4_pid 
+  :val T4_status 
+  :val T4_solution 
+  :val T4_aid 
+  :val actT2
+  :val false
+  :val actT4
+  
+  
+  :comment T_4: SoftwareDeveloper
+  
+   :comment T_4 opening
+ 
+  
+  :comment T17
+  :transition
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 false)(= T3_status Unsolved)(= T3_solution NULL_String)
+  :numcases 1
+  :case 
+   :val Log1[j] 
+   :val Log2[j]
+   :val Log3[j] 
+
+   :val T1_problem
+   :val T1_cid 
+   :val T1_pid
+   :val T1_status 
+   :val T1_solution
+   :val T2_problem 
+   :val T2_pid 
+   :val T2_status
+   :val T3_solution
+   :val T2_aid
+   :val T3_problem 
+   :val T3_pid 
+   :val T3_status
+   :val T3_solution
+   :val T3_aid
+   :val T3_problem 
+   :val T3_pid 
+   :val NULL_String
+   :val NULL_String
+   :val NULL_SupportAgent
+   :val actT2
+   :val actT3
+   :val true
+   
+   
+  :comment T_4 FindAgent
+ 
+  :comment T18
+  :transition
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 true)(not(= f NULL_SupportAgent))(= (SuppIsDevelop f) yes)(= (SuppProb f) T4_pid)
+  :numcases 1
+  :case 
+   :val Log1[j] 
+   :val Log2[j]
+   :val Log3[j] 
+
+   :val T1_problem
+   :val T1_cid 
+   :val T1_pid
+   :val T1_status 
+   :val T1_solution
+   :val T2_problem 
+   :val T2_pid 
+   :val T2_status
+   :val T2_solution
+   :val T2_aid
+   :val T3_problem 
+   :val T3_pid 
+   :val T3_status
+   :val T3_solution 
+   :val T3_aid
+   :val T4_problem 
+   :val T4_pid 
+   :val Handling
+   :val T4_solution 
+   :val f
+   :val actT2
+   :val actT3 
+   :val actT4
+ 
+ :comment T_4 ExamineProblem
+
+ :comment T19
+ :transition
+ :var j
+ :guard  (= actT2 true)(= actT3 true)(= actT4 true)(= T4_status Handling)(not (= T4_pid NULL_ProblemType))(not (= g NULL_String))
+ :numcases 1
+ :case 
+  :val Log1[j] 
+  :val Log2[j]
+  :val Log3[j] 
+
+  :val T1_problem
+  :val T1_cid 
+  :val T1_pid
+  :val T1_status 
+  :val T1_solution
+  :val T2_problem 
+  :val T2_pid 
+  :val T2_status
+  :val T2_solution
+  :val T2_aid
+  :val T3_problem 
+  :val T3_pid 
+  :val T3_status
+  :val T3_solution 
+  :val T3_aid
+  :val T4_problem 
+  :val T4_pid 
+  :val Solved
+  :val g
+  :val T4_aid
+  :val actT2
+  :val actT3 
+  :val actT4
+  
+  
+  :comment T_4 Closing
+
+  :comment T20
+  :transition
+  :var j
+  :guard  (= actT2 true)(= actT3 true)(= actT4 true)(not (= T4_solution NULL_String))(= T4_status Solved)
+  :numcases 1
+  :case 
+   :val Log1[j] 
+   :val Log2[j]
+   :val Log3[j] 
+
+   :val T1_problem
+   :val T1_cid 
+   :val T1_pid
+   :val T1_status 
+   :val T4_solution
+   :val T2_problem 
+   :val T2_pid 
+   :val T2_status
+   :val T2_solution
+   :val T2_aid
+   :val T3_problem 
+   :val T3_pid 
+   :val T3_status
+   :val T4_solution 
+   :val T3_aid
+   :val T4_problem 
+   :val T4_pid 
+   :val T4_status
+   :val T4_solution
+   :val T4_aid
+   :val actT2
+   :val actT3 
+   :val false
+  
+  
+ 
