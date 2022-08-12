@@ -1,0 +1,1028 @@
+:comment Bank-Account-Opening
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type ExistingAccount) 
+:smt (define-type Document)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerPhone ::(-> Customer String))
+:smt (define CustomerAddr ::(-> Customer String))
+:smt (define ExistingAccountCust ::(-> ExistingAccount Customer))
+:smt (define ExistingAccountType ::(-> ExistingAccount String))
+:smt (define ExistingAccountStatus ::(-> ExistingAccount String))
+:smt (define DocumentType ::(-> Document String))
+
+
+:smt (define GettingCustomerCoordinates ::String)
+:smt (define AccountSelected ::String)
+:smt (define DocumentsSigned ::String)
+:smt (define Good ::String)
+:smt (define AccountOpened ::String)
+:smt (define GotCustomerCoordinates ::String)
+:smt (define Bad ::String)
+
+
+:db_driven 
+:db_sorts Customer ExistingAccount Document String
+:db_functions CustomerName  CustomerPhone  CustomerAddr  ExistingAccountCust ExistingAccountType  ExistingAccountStatus  DocumentType
+:db_constants   GettingCustomerCoordinates  AccountSelected  DocumentsSigned  Good  AccountOpened  GotCustomerCoordinates Bad
+:db_relations 
+
+:local NewAccount1  String
+:local NewAccount2  String
+:local NewAccount3  String
+:local NewAccount4  String
+:local NewAccount5  int
+:local Documents1  Document
+:local FoundAccounts1 ExistingAccount
+
+
+:global T1_name String
+:global T1_phone String
+:global T1_address String
+:global T1_acttype String
+:global T1_status String
+:global T1_amountdeposit int
+:global T1_reviewstatus String
+:global T2_cid Customer
+:global T2_name String
+:global T2_phone String
+:global T2_address String
+:global T2_status String
+:global T3_name String
+:global T3_phone String
+:global T3_address String
+:global T3_acttype String
+:global T3_status String
+:global T3_did Document
+:global T4_name String
+:global T4_phone String
+:global T4_address String
+:global T4_acttype String
+:global T4_reviewstatus String
+:global T4_aid ExistingAccount
+:global T4_cid Customer
+:global actT2 bool
+:global actT3 bool
+:global actT4 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_name NULL_String) (=  T1_phone NULL_String) (=  T1_address NULL_String) (=   T1_acttype NULL_String) (= T1_status NULL_String)(=  T1_amountdeposit -1) (= T1_reviewstatus NULL_String) (= T2_cid NULL_Customer)(= T2_name NULL_String)(= T2_phone NULL_String)(= T2_address NULL_String)(= T2_status NULL_String)(= T3_name NULL_String)(= T3_phone NULL_String)(= T3_address NULL_String)(= T3_acttype NULL_String)(= T3_status NULL_String)(= T3_did NULL_Document)(= T4_name NULL_String)(= T4_phone NULL_String)(= T4_address NULL_String)(= T4_acttype NULL_String)(= T4_reviewstatus NULL_String)(= T4_aid NULL_ExistingAccount)(= T4_cid NULL_Customer)(= NewAccount1[x]   NULL_String)(= NewAccount2[x]   NULL_String)(= NewAccount3[x]   NULL_String)(= NewAccount4[x]   NULL_String)(= NewAccount5[x]   -1)(= Documents1[x]   NULL_Document)(= FoundAccounts1[x]   NULL_ExistingAccount)(=  actT2 false)(= actT3 false)(= actT4 false)
+
+:u_cnj (= T1_status DocumentsSigned)(not (= T1_phone NULL_String))
+
+:eevar e Customer    
+:eevar d ExistingAccount 
+:eevar f Document
+:eevar g int
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q String
+
+
+:comment T_1: BankAccountOpening
+
+:comment T_1 Initialize
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val NULL_String 
+:val NULL_String  
+:val NULL_String  
+:val NULL_String 
+:val GettingCustomerCoordinates 
+:val 0
+:val NULL_String
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+
+:comment T_1 IdentifyCustomerAccountSelection
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_acttype NULL_String)(= T1_status GotCustomerCoordinates)(not (= l NULL_String))
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val l 
+:val AccountSelected
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+:comment T_1 RegisterDeposit
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status AccountSelected)(> g 0)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val g
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+:comment T_1  OpenBankAccount
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status DocumentsSigned)(= T1_reviewstatus Good)(= NewAccount1[x]   NULL_String)(= NewAccount2[x]   NULL_String)(= NewAccount3[x]   NULL_String)(= NewAccount4[x]   NULL_String)(= NewAccount5[x]   -1)
+:numcases 2
+:case (= x j)
+:val T1_name
+:val T1_phone
+:val T1_address
+:val T1_acttype
+:val T1_amountdeposit
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val AccountOpened
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val AccountOpened
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+
+
+:comment T_2: GetCustomerCoordinates
+
+:comment T_2 Opening
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status GettingCustomerCoordinates)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val NULL_Customer 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val true
+:val actT3
+:val actT4
+
+
+
+
+:comment T_2 GettingExistingCustomer
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_name NULL_String)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val e 
+:val (CustomerName e)
+:val (CustomerPhone e)
+:val (CustomerAddr e)
+:val GotCustomerCoordinates 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+:comment T_2 GetNewCustomer
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_name NULL_String)(not (= l NULL_String))(not (= m NULL_String))(not (= n NULL_String))
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val l
+:val m 
+:val n 
+:val GotCustomerCoordinates 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+
+:comment T_2 closing
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status GotCustomerCoordinates)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T1_acttype 
+:val T2_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val false
+:val actT3
+:val actT4
+
+
+:comment T_3: SignDocuments
+
+:comment T_3 opening
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status AccountSelected)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T1_name
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val NULL_String 
+:val NULL_Document
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val true
+:val actT4
+
+
+
+:comment T_3   PrepareAccountOpeningDocuments
+
+:comment T10
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(not (= f NULL_Document))(= Documents1[x] NULL_Document)(= (DocumentType f) T3_acttype)
+:numcases 2
+:case (= x j)
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val f
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype
+:val DocumentsSigned 
+:val f 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+:case
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype
+:val DocumentsSigned 
+:val f  
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+:comment T_3 closing
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= T3_status DocumentsSigned)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T3_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val false
+:val actT4
+
+
+:comment T_4: StatusReviiew
+
+:comment T_4 openng
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status AccountSelected)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val NULL_String 
+:val NULL_ExistingAccount 
+:val NULL_Customer
+:val actT2
+:val actT3
+:val true
+
+
+
+:comment T_4 SearchExistingAccount
+
+:comment T13
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= FoundAccounts1[x] NULL_ExistingAccount)(not (= d NULL_ExistingAccount))(= (CustomerName (ExistingAccountCust d)) T4_name)(= (CustomerPhone (ExistingAccountCust d)) T4_phone)(= (CustomerAddr (ExistingAccountCust d)) T4_address)
+:numcases 2
+:case (= x j)
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val d
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val d 
+:val (ExistingAccountCust  d)
+:val actT2
+:val actT3
+:val actT4
+
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val d 
+:val (ExistingAccountCust  d)
+:val actT2
+:val actT3
+:val actT4
+
+
+:comment T_4 CheckAccountStatus
+
+:comment T14
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= T4_reviewstatus NULL_String)(not (= FoundAccounts1[x] NULL_ExistingAccount))(= (ExistingAccountStatus FoundAccounts1[x]) Bad)
+:numcases 2
+:case (= x j)
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val NULL_ExistingAccount
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val Bad 
+:val FoundAccounts1[x] 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val Bad 
+:val FoundAccounts1[x] 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+:comment T_4 FinishChecking
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= T4_reviewstatus NULL_String)
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T1_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val Good
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val actT4
+
+
+
+
+
+
+:comment T_4 closing
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(not (= T4_reviewstatus NULL_String))
+:numcases 1
+:case 
+:val NewAccount1[j]
+:val NewAccount2[j]
+:val NewAccount3[j]
+:val NewAccount4[j]
+:val NewAccount5[j]
+:val Documents1[j]
+:val FoundAccounts1[j]
+
+
+:val T1_name 
+:val T1_phone 
+:val T1_address 
+:val T1_acttype 
+:val T1_status 
+:val T1_amountdeposit 
+:val T4_reviewstatus 
+:val T2_cid 
+:val T2_name 
+:val T2_phone 
+:val T2_address 
+:val T2_status 
+:val T3_name
+:val T3_phone 
+:val T3_address 
+:val T3_acttype 
+:val T3_status 
+:val T3_did 
+:val T4_name 
+:val T4_phone 
+:val T4_address 
+:val T4_acttype 
+:val T4_reviewstatus 
+:val T4_aid 
+:val T4_cid 
+:val actT2
+:val actT3
+:val false
+
+

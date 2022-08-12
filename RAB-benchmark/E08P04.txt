@@ -1,0 +1,1797 @@
+:comment Commercial-Financing	
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type CreditRecord) 
+:smt (define-type CreditHistory)
+:smt (define-type Request)
+:smt (define-type Contract)
+:smt (define-type String)
+
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerRecord ::(-> Customer CreditRecord))
+:smt (define CreditRecordStatus ::(-> CreditRecord String))
+:smt (define CreditRecordHistory1 ::(-> CreditRecord CreditHistory))
+:smt (define CreditRecordHistory2 ::(-> CreditRecord CreditHistory))
+:smt (define CreditRecordHistory3 ::(-> CreditRecord CreditHistory))
+:smt (define CreditHistoryFlag ::(-> CreditRecord String))
+:smt (define RequestCid ::(-> Request Customer))
+:smt (define RequestAmount ::(-> Request int))
+:smt (define RequestInter ::(-> Request int))
+:smt (define RequestStatus ::(-> Request String))
+:smt (define ContractCustomer ::(-> Contract Customer))
+:smt (define ContractStatement ::(-> Contract String))
+
+
+
+:smt (define ConsolidateAndDigitalizeData ::String)
+:smt (define AnalyzeFinancialData ::String)
+:smt (define Qualified ::String)
+:smt (define RequestQualified ::String)
+:smt (define NotQualified ::String)
+:smt (define RequestNotQualified ::String)
+:smt (define RefusalLetterSent ::String)
+:smt (define Verified ::String)
+:smt (define NotVerified ::String)
+:smt (define Good ::String)
+:smt (define Bad ::String)
+:smt (define Canceled ::String)
+:smt (define Accepted ::String)
+:smt (define Refuse ::String)
+:smt (define Change  ::String)
+:smt (define Days20 ::String)
+:smt (define ChangeAccepted ::String)
+:smt (define ChangeNotAccepted ::String)
+:smt (define CustomerAccepted ::String)
+:smt (define CustomerCanceled ::String)
+
+
+:db_driven 
+:db_sorts Customer CreditRecord CreditHistory Request Contract String
+:db_functions CustomerName CustomerRecord CreditRecordStatus CreditRecordHistory1 CreditRecordHistory2 CreditRecordHistory3 CreditHistoryFlag RequestCid RequestAmount RequestInter RequestStatus ContractCustomer ContractStatement 
+:db_constants  ConsolidateAndDigitalizeData  AnalyzeFinancialData Qualified RequestQualified NotQualified RequestNotQualified RefusalLetterSent Verified NotVerified Good Bad Canceled Accepted Refuse Change Days20 ChangeAccepted 
+:db_constants  ChangeNotAccepted CustomerAccepted CustomerCanceled
+:db_relations 
+
+:local Request1  Request
+:local Request2  Customer
+:local Letter1  Request
+:local Letter2  Customer
+:local Letter3 String
+:local Signed1 Contract
+:local Contracts1 Contract
+
+
+
+:global T1_status String
+:global T1_rid Request
+:global T1_cid Customer
+:global T2_status String
+:global T2_cid Customer
+:global T2_record CreditRecord
+:global T3_status String
+:global T3_rid Request
+:global T3_cid Customer
+:global T3_response String
+:global T4_status String
+:global T4_rid Request
+:global T4_cid Customer
+:global T4_coid Contract
+:global actT2 bool
+:global actT3 bool
+:global actT4 bool
+:global C int
+
+
+
+:initial
+:var x
+:cnj (=  T1_status NULL_String)(= T1_rid NULL_Request)(= T1_cid NULL_Customer)(=  T2_status NULL_String)(=  T2_cid NULL_Customer)(= T2_record NULL_CreditRecord)(=  T3_status NULL_String)(= T3_rid NULL_Request)(=  T3_cid NULL_Customer)(= T3_response NULL_String)(= T4_status NULL_String)(= T4_rid NULL_Request)(= T4_cid NULL_Customer)(= T4_coid NULL_Contract)(= Request1[x]   NULL_Request)(= Request2[x]   NULL_Customer)(= Letter1[x]  NULL_Request)(= Letter2[x]  NULL_Customer)(= Letter3[x] NULL_String)(= Signed1[x] NULL_Contract)(= Contracts1[x] NULL_Contract)(=  actT2 false)(= actT3 false)(= actT4 false)(= C 0)
+
+:u_cnj (not (= T2_record NULL_CreditRecord))(= (CreditRecordStatus T2_record) Good)(= T1_status RequestNotQualified)
+
+:eevar e Customer     
+:eevar d CreditRecord
+:eevar f CreditHistory
+:eevar g Request 
+:eevar l Contract
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: Sales
+
+:comment T_1 CommercialFinancingRequest
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status NULL_String)(not (= g NULL_Request))
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j]
+
+
+
+:val ConsolidateAndDigitalizeData 
+:val g 
+:val (RequestCid g) 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_1 ConsolidateAndDigitalizeData
+
+
+:comment T2
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status ConsolidateAndDigitalizeData)(= Request1[x]   NULL_Request)(= Request2[x]   NULL_Customer)
+:numcases 2
+:case (= x j)
+:val T1_rid
+:val T1_cid 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j]
+
+
+
+:val AnalyzeFinancialData
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+:case
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val AnalyzeFinancialData
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_1 AnalyzeFinancialData1
+
+
+:comment T3
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status AnalyzeFinancialData)(= (RequestStatus Request1[x]) Qualified)(not (= Request1[x]   NULL_Request))(not (= Request2[x]   NULL_Customer))
+:numcases 2
+:case (= x j)
+:val NULL_Request  
+:val NULL_Customer
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val RequestQualified 
+:val Request1[x] 
+:val Request2[x]
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+:case
+:val Request1[j]  
+:val Request2[j]
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j]  
+
+
+
+:val RequestQualified 
+:val Request1[x] 
+:val Request2[x]
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_1 AnalyzeFinancialData2
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status AnalyzeFinancialData)(= (RequestStatus Request1[x]) NotQualified)(not (= Request1[x]   NULL_Request))(not (= Request2[x]   NULL_Customer))
+:numcases 2
+:case (= x j)
+:val NULL_Request  
+:val NULL_Customer
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val RequestNotQualified 
+:val Request1[x] 
+:val Request2[x]
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+:case
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val RequestNotQualified 
+:val Request1[x] 
+:val Request2[x]
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+
+
+
+:comment T_1 SendRefusalLetter
+
+
+:comment T5
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status RequestNotQualified)(= Letter1[x]  NULL_Request)(= Letter2[x]  NULL_Customer)(= Letter3[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j]  
+:val T1_rid  
+:val T1_cid  
+:val T1_status 
+:val Signed1[j] 
+:val Contracts1[j]
+
+
+
+:val RefusalLetterSent 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:case
+:val Request1[j]  
+:val Request2[j]  
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j]
+
+
+
+:val RefusalLetterSent 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+
+:comment T_2: VeriffyCredit
+
+:comment T_2 opening
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status RequestQualified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val NULL_String 
+:val T1_cid 
+:val NULL_CreditRecord
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val true
+:val actT3 
+:val actT4
+:val C
+
+
+:comment T_2 Verify1
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(not (= T2_cid NULL_Customer))(= (CustomerRecord T2_cid) d)(not (= d NULL_CreditRecord))(= (CreditRecordStatus d) Good)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val Verified 
+:val T2_cid 
+:val d
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_2 Verify2
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(not (= T2_cid NULL_Customer))(= (CustomerRecord T2_cid) d)(not (= d NULL_CreditRecord))(= (CreditRecordStatus d) Bad)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val NotVerified 
+:val T2_cid 
+:val d
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_2 PrepareAnalysis1
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(= T2_status Verified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val RequestQualified
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+:comment T_2 PrepareAnalysis2
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(= T2_status NotVerified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val RequestNotQualified
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_2 closing1
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(= T2_status RequestQualified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T2_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val false
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_2 closing2
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= C 0)(= T2_status RequestNotQualified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T2_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val false
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_3:  SubmitProposal
+
+:comment T_3 opening
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status RequestQualified)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val NULL_String
+:val T1_rid 
+:val T1_cid 
+:val NULL_String 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val true
+:val actT4
+:val C
+
+
+
+
+:comment T_3 GetResponse1
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response NULL_String)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val Change
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_3 GetResponse2
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response NULL_String)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val Refuse
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+:comment T_3 GetResponse3
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response NULL_String)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val Days20
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_3 GetResponse4
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response NULL_String)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val Accepted
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+
+
+:comment T_3 AnalyzeProposedChanges1
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response Change)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val ChangeAccepted
+:val T3_rid 
+:val T3_cid 
+:val T3_response
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+:comment T_3 AnalyzeProposedChanges2
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response Change)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val ChangeNotAccepted
+:val T3_rid 
+:val T3_cid 
+:val T3_response
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+:comment T_3 Cancelation1
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response Refuse)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Canceled
+:val T3_rid 
+:val T3_cid 
+:val T3_response
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_3 Cancelation2
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response Days20)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Canceled
+:val T3_rid 
+:val T3_cid 
+:val T3_response
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_3 Cancelation3
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_status ChangeNotAccepted)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Canceled 
+:val T3_rid 
+:val T3_cid 
+:val T3_response
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+
+
+:comment T_3 SendAcceptLetter1
+
+
+:comment T23
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_status ChangeAccepted)(= Letter1[x]  NULL_Request)(= Letter2[x]  NULL_Customer)(= Letter3[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j] 
+:val T3_rid  
+:val T3_cid  
+:val T3_status
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Accepted 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Accepted 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_3 SendAcceptLetter2
+
+
+:comment T24
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_response Accepted)(= Letter1[x]  NULL_Request)(= Letter2[x]  NULL_Customer)(= Letter3[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j] 
+:val T3_rid  
+:val T3_cid  
+:val T3_status
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Accepted 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val Accepted 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_3 closing1
+
+
+:comment T25
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_status Canceled)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T3_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val false
+:val actT4
+:val C
+
+
+:comment T_3 closing2
+
+
+:comment T26
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= C 0)(= T3_status Accepted)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T3_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val false
+:val actT4
+:val C
+
+
+
+
+:comment T_4: SignContract
+
+:comment T_4 opening
+
+
+:comment T27
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= C 0)(= T1_status Accepted)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val NULL_String 
+:val T1_rid 
+:val T1_cid 
+:val NULL_Contract 
+:val actT2 
+:val actT3 
+:val true
+:val C
+
+
+:comment T_4 PrepareDocuments
+
+
+:comment T28
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(= T4_coid NULL_Contract)(not (= l NULL_Contract))(= (ContractCustomer l) T4_cid)(= Contracts1[x] NULL_Contract)
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val l
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val l 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val l 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+:comment T_4 SignDocuments1
+
+
+:comment T29
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(not (= T4_coid NULL_Contract))(= (ContractCustomer Contracts1[x]) T4_cid)(not (= Contracts1[x] NULL_Contract))
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val NULL_Contract 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val Contracts1[x]
+:val actT2 
+:val actT3 
+:val actT4
+:val 1
+
+
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val Contracts1[x] 
+:val actT2 
+:val actT3 
+:val actT4
+:val 1
+
+
+
+
+:comment T_4 SignDocuments2
+
+
+:comment T30
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 1)(= Signed1[x] NULL_Contract)
+:numcases 2
+:case (= x j)
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val T4_coid
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid
+:val actT2 
+:val actT3 
+:val actT4
+:val 0
+
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j]
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid
+:val actT2 
+:val actT3 
+:val actT4
+:val 0
+
+
+
+
+
+
+:comment T_4 CustomerResponse1
+
+
+:comment T31
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(not (= T4_coid NULL_Contract))
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val CustomerAccepted 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+:comment T_4 CustomerResponse2
+
+
+:comment T32
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(not (= T4_coid NULL_Contract))
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T1_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val CustomerCanceled 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val actT4
+:val C
+
+
+
+
+
+
+
+:comment T_4  closing1
+
+
+:comment T33
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(= T4_status CustomerAccepted)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T4_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val false
+:val C
+
+
+
+
+:comment T_4  closing2
+
+
+:comment T34
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= C 0)(= T4_status CustomerCanceled)
+:numcases 1
+:case 
+:val Request1[j]  
+:val Request2[j] 
+:val Letter1[j]  
+:val Letter2[j]  
+:val Letter3[j] 
+:val Signed1[j] 
+:val Contracts1[j] 
+
+
+
+:val T4_status 
+:val T1_rid 
+:val T1_cid 
+:val T2_status 
+:val T2_cid 
+:val T2_record 
+:val T3_status 
+:val T3_rid 
+:val T3_cid 
+:val T3_response 
+:val T4_status 
+:val T4_rid 
+:val T4_cid 
+:val T4_coid 
+:val actT2 
+:val actT3 
+:val false
+:val C
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
