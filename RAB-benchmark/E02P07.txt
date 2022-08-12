@@ -1,0 +1,2855 @@
+:comment Airline-Check-In
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Ticket) 
+:smt (define-type Airline) 
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define TicketCustName ::(-> Ticket String))
+:smt (define TicketFromCity ::(-> Ticket String))
+:smt (define TicketToCity ::(-> Ticket String))
+:smt (define TicketDate ::(-> Ticket String))
+:smt (define TicketNumBag ::(-> Ticket int))
+:smt (define TicketAid ::(-> Ticket Airline))
+:smt (define AirlineMaxWeight ::(-> Airline int))
+:smt (define AirlineMinOverWeight ::(-> Airline int))
+:smt (define AirlineOverWeightCharge ::(-> Airline int))
+:smt (define AirlineExtraBagCharge ::(-> Airline int))
+
+
+
+:smt (define Init ::String)
+:smt (define NotVerified ::String)
+:smt (define CustomerRejected ::String)
+:smt (define Verified ::String)
+:smt (define ItineraryConfirmed ::String)
+:smt (define HasProhibitedObjects ::String)
+:smt (define HasNoProhibitedObjects  ::String)
+:smt (define AddingBaggages ::String)
+:smt (define BaggagesAdded ::String)
+:smt (define PassagerInformed ::String)
+:smt (define Paid ::String)
+:smt (define BoardingPassPrinted ::String)
+:smt (define HandedOutBoardingPass ::String)
+:smt (define AnotherTicket ::String)
+
+
+:db_driven 
+:db_sorts Ticket Airline String
+:db_functions TicketCustName TicketFromCity TicketToCity TicketDate TicketNumBag TicketAid  AirlineMaxWeight AirlineMinOverWeight  AirlineOverWeightCharge AirlineExtraBagCharge
+:db_constants  Init  NotVerified CustomerRejected Verified ItineraryConfirmed HasProhibitedObjects HasNoProhibitedObjects AddingBaggages BaggagesAdded PassagerInformed Paid
+:db_constants BoardingPassPrinted HandedOutBoardingPass  AnotherTicket
+:db_relations 
+
+:local Baggages1  int
+
+
+
+:global T1_tid Ticket
+:global T1_baggagefee int
+:global T1_status String
+:global T1_amountpaid int
+:global T2_tid Ticket
+:global T2_customername String
+:global T2_fromcity String
+:global T2_tocity String
+:global T2_date String
+:global T2_status String
+:global T3_tid Ticket
+:global T3_aid Airline
+:global T3_maxweight int
+:global T3_minoverweight int
+:global T3_overweightcharge int
+:global T3_extrabaggagecharge int
+:global T3_baggagefee int
+:global T3_weight int
+:global T3_weight1 int
+:global T3_weight2 int
+:global T3_weight3 int
+:global T3_weight4 int
+:global T3_p1 int
+:global T3_p2 int
+:global T3_p3 int
+:global T3_p4 int
+:global T3_c1 int
+:global T3_c2 int
+:global T3_c3 int
+:global T3_c4 int
+:global T3_numbaggages int
+:global T3_numfreebaggages int
+:global T3_status String
+:global actT2 bool
+:global actT3 bool
+:global C int
+
+
+
+
+:initial
+:var x
+:cnj (=  T1_tid NULL_Ticket)(= T1_baggagefee -1)(= T1_status NULL_String)(= T1_amountpaid -1)(= T2_tid NULL_Ticket)(= T2_customername NULL_String)(=  T2_fromcity NULL_String)(=  T2_tocity NULL_String)(= T2_date NULL_String)(= T2_status NULL_String)(= T3_tid NULL_Ticket)(= T3_aid NULL_Airline)(= T3_maxweight -1)(=  T3_minoverweight -1)(= T3_overweightcharge -1)(= T3_extrabaggagecharge -1)(= T3_baggagefee -1)(= T3_weight -1)(= T3_weight1 -1)(= T3_weight2 -1)(= T3_weight3 -1)(= T3_weight4 -1)(= T3_p1 -1)(= T3_p2 -1)(= T3_p3 -1)(= T3_p4 -1)(= T3_c1 -1)(= T3_c2 -1)(= T3_c3 -1)(= T3_c4 -1)(= T3_numbaggages -1)(= T3_numfreebaggages -1)(= T3_status NULL_String)(= Baggages1[x]   -1)(=  actT2 false)(= actT3 false)(= C 0)
+
+:u_cnj (= T2_status AnotherTicket)
+
+:eevar e Ticket 
+:eevar d Airline
+:eevar f String
+:eevar g String
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: CheckIn
+
+:comment T_1 Start
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status NULL_String)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val NULL_Ticket
+:val 0
+:val Init
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_1 RejectCustomer
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status NotVerified)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val CustomerRejected
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:comment T_1 ConfirmItinerary
+
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status Verified)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val ItineraryConfirmed 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_1 AskProhibitedObjects1
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status ItineraryConfirmed)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val HasProhibitedObjects
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_1 AskProhibitedObjects2
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status ItineraryConfirmed)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val HasNoProhibitedObjects
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:comment T_1 RemoveProhibitedObjects1
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status HasProhibitedObjects)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val HasProhibitedObjects
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:comment T_1 RemoveProhibitedObjects2
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status HasProhibitedObjects)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val HasNoProhibitedObjects
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_1 AskForBaggages
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status HasNoProhibitedObjects)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val AddingBaggages
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_1 InformPassagerAdditionalFee
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status BaggagesAdded)(> T1_baggagefee 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val PassagerInformed
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_1 CollectPayment
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status PassagerInformed)(> T1_baggagefee 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val Paid 
+:val T1_baggagefee 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_1 PrintBoardingPass1
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status Paid)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val BoardingPassPrinted
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_1 PrintBoardingPass2
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status BaggagesAdded)(> T1_baggagefee 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val BoardingPassPrinted
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_1 HandOutBoardingPass
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status BoardingPassPrinted)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val HandedOutBoardingPass
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_2: VerifyInfo
+
+:comment T_2 opening
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status Init)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val NULL_Ticket
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val true
+:val actT3
+:val C
+
+
+
+
+
+:comment T_2 Verify1
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status NULL_String)(not (= e NULL_Ticket))
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val e
+:val (TicketCustName e)
+:val (TicketFromCity e)
+:val (TicketToCity e) 
+:val (TicketDate e)
+:val Verified
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_2 Verify2
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status AnotherTicket)(not (= e NULL_Ticket))
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val e
+:val (TicketCustName e)
+:val (TicketFromCity e)
+:val (TicketToCity e) 
+:val (TicketDate e)
+:val Verified
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+
+:comment T_2 Verify3
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status NULL_String)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val NotVerified
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_2 Verify4
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status AnotherTicket)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val NotVerified
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_2 Verify5
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status NULL_String)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val AnotherTicket
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_2 Verify6
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status AnotherTicket)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val AnotherTicket
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_2 closing1
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status NotVerified)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T2_tid 
+:val T1_baggagefee
+:val T2_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val false
+:val actT3
+:val C
+
+
+
+:comment T_2 closing2
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= T2_status Verified)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T2_tid 
+:val T1_baggagefee
+:val T2_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val false
+:val actT3
+:val C
+
+
+
+
+:comment T_3: AddBaggages
+
+
+:comment T_3 opening
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= T1_status AddingBaggages)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T1_tid 
+:val NULL_Airline
+:val -1
+:val -1
+:val -1
+:val -1 
+:val -1
+:val -1
+:val -1 
+:val -1
+:val -1 
+:val -1 
+:val -1 
+:val -1 
+:val -1 
+:val -1 
+:val -1 
+:val -1
+:val -1 
+:val -1
+:val -1
+:val -1
+:val NULL_String 
+:val actT2
+:val true
+:val C
+
+
+
+:comment T_3 Initialize
+
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(not (= T3_status BaggagesAdded))(not (= T3_tid NULL_Ticket))
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid
+:val (TicketAid T3_tid)
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val 0
+:val 0
+:val 0 
+:val 0
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val AddingBaggages
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_3 AddBaggage
+
+
+:comment T25
+:transition
+:var j
+:var x 
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status AddingBaggages)(>= q 0)(= Baggages1[x]   -1)
+:numcases 2
+:case (= j x )
+:val q
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val q 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:case
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val q 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_3 SelectFirstBaggageToAdd
+
+
+:comment T26
+:transition
+:var j
+:var x 
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status AddingBaggages)(> Baggages1[x] -1)(<= Baggages1[x] (AirlineMaxWeight T3_aid))
+:numcases 2
+:case (= x j)
+:val -1
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid) 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val Baggages1[x]
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:case
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid)
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val Baggages1[x]
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_3 SelectSecondBaggageToAdd
+
+
+:comment T27
+:transition
+:var j
+:var x 
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status AddingBaggages)(> Baggages1[x] -1)(<= Baggages1[x] (AirlineMaxWeight T3_aid))
+:numcases 2
+:case (= x j)
+:val -1
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid) 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val Baggages1[x] 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:case
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid)
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val Baggages1[x]
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+:comment T_3 SelectThirdBaggageToAdd
+
+
+:comment T28
+:transition
+:var j
+:var x 
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status AddingBaggages)(> Baggages1[x] -1)(<= Baggages1[x] (AirlineMaxWeight T3_aid))
+:numcases 2
+:case (= x j)
+:val -1
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid) 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val T3_weight2 
+:val Baggages1[x] 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:case
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid)
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val T3_weight2
+:val Baggages1[x] 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:comment T_3 SelectFourthBaggageToAdd
+
+
+:comment T29
+:transition
+:var j
+:var x 
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status AddingBaggages)(> Baggages1[x] -1)(<= Baggages1[x] (AirlineMaxWeight T3_aid))
+:numcases 2
+:case (= x j)
+:val -1
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid) 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val T3_weight2 
+:val T3_weight3
+:val Baggages1[x] 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+:case
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val (AirlineMaxWeight T3_aid)
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val Baggages1[x] 
+:val T3_weight1
+:val T3_weight2
+:val T3_weight3
+:val Baggages1[x] 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val C
+
+
+
+
+:comment T_3 CalculateCharge1
+
+
+:comment T30
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(not (= T3_aid NULL_Airline))(not (= T3_tid NULL_Ticket))(> T3_weight1 (AirlineMinOverWeight T3_aid))(= (AirlineExtraBagCharge T3_aid) 100)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val (AirlineMinOverWeight T3_aid)
+:val (AirlineOverWeightCharge T3_aid) 
+:val (AirlineExtraBagCharge T3_aid)
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val (AirlineOverWeightCharge T3_aid) 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val (TicketNumBag T3_tid)
+:val T3_status 
+:val actT2
+:val actT3
+:val 1
+
+
+
+:comment T_3 CalculateCharge2
+
+
+:comment T31
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(not (= T3_aid NULL_Airline))(not (= T3_tid NULL_Ticket))(>= T3_weight1 (AirlineMinOverWeight T3_aid))(= (AirlineExtraBagCharge T3_aid) 100)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val (AirlineMinOverWeight T3_aid)
+:val (AirlineOverWeightCharge T3_aid) 
+:val (AirlineExtraBagCharge T3_aid)
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val 0
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val (TicketNumBag T3_tid)
+:val T3_status 
+:val actT2
+:val actT3
+:val 1
+
+
+
+
+:comment T_3   CalculateCharge3
+
+
+:comment T32
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 1)(> T3_weight2 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_overweightcharge 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 2
+
+
+:comment T_3   CalculateCharge4
+
+
+:comment T33
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 1)(<= T3_weight2 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val 0
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 2
+
+
+:comment T_3   CalculateCharge5
+
+
+:comment T34
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 2)(> T3_weight3 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_overweightcharge  
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 3
+
+
+
+:comment T_3   CalculateCharge6
+
+
+:comment T35
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 2)(<= T3_weight3 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val 0
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 3
+
+
+
+:comment T_3   CalculateCharge7
+
+
+:comment T36
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 3)(> T3_weight4 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_overweightcharge
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 4
+
+
+
+:comment T_3   CalculateCharge8
+
+
+:comment T37
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 3)(<= T3_weight4 T3_minoverweight)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val 0
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 4
+
+
+
+:comment T_3   CalculateCharge9
+
+
+:comment T38
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 4)(> T3_weight1 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val 1
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 5
+
+
+
+:comment T_3   CalculateCharge10
+
+
+:comment T39
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 4)(= T3_weight1 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val 0
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 5
+
+
+:comment T_3   CalculateCharge11
+
+
+:comment T40
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 5)(> T3_weight2 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val 1
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 6
+
+
+:comment T_3   CalculateCharge12
+
+
+
+:comment T41
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 5)(= T3_weight2 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val 0
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 6
+
+
+
+:comment T_3   CalculateCharge13
+
+
+
+:comment T42
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 6)(> T3_weight3 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val T3_c2
+:val 1
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 7
+
+
+
+:comment T_3   CalculateCharge14
+
+
+
+:comment T43
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 6)(= T3_weight3 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val T3_c2
+:val 0
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 7
+
+
+
+:comment T_3   CalculateCharge15
+
+
+
+:comment T44
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 7)(> T3_weight4 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val T3_c2
+:val T3_c3
+:val 1
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 8
+
+
+
+
+:comment T_3   CalculateCharge16
+
+
+
+:comment T45
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 7)(= T3_weight4 0)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2
+:val T3_p3  
+:val T3_p4
+:val T3_c1
+:val T3_c2
+:val T3_c3
+:val 0
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val actT3
+:val 8
+
+
+
+:comment T_3  CalculateCharge17
+
+
+:comment T46
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 8)(>= (+ T3_c1 (+ T3_c2 (+ T3_c3 T3_c4))) T3_numfreebaggages)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val (+ (* 10 (+ (+ T3_c1 (+ T3_c2 (+ T3_c3 T3_c4))) (* -1 T3_numfreebaggages)))  (+ T3_p1 (+ T3_p2 (+ T3_p3 T3_p4))))
+:val T3_numfreebaggages 
+:val BaggagesAdded
+:val actT2
+:val actT3
+:val 0
+
+
+
+:comment T_3  CalculateCharge18
+
+
+:comment T47
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 8)(< (+ T3_c1 (+ T3_c2 (+ T3_c3 T3_c4))) T3_numfreebaggages)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T1_baggagefee
+:val T1_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val  (+ T3_p1 (+ T3_p2 (+ T3_p3 T3_p4)))
+:val T3_numfreebaggages 
+:val BaggagesAdded
+:val actT2
+:val actT3
+:val 0
+
+
+
+
+
+
+:comment T_3 closing
+
+
+:comment T48
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= T3_status BaggagesAdded)
+:numcases 1
+:case 
+:val Baggages1[j]
+
+
+
+:val T1_tid 
+:val T3_baggagefee
+:val T3_status 
+:val T1_amountpaid 
+:val T2_tid 
+:val T2_customername 
+:val T2_fromcity 
+:val T2_tocity 
+:val T2_date 
+:val T2_status 
+:val T3_tid 
+:val T3_aid 
+:val T3_maxweight 
+:val T3_minoverweight
+:val T3_overweightcharge 
+:val T3_extrabaggagecharge 
+:val T3_baggagefee 
+:val T3_weight 
+:val T3_weight1 
+:val T3_weight2 
+:val T3_weight3 
+:val T3_weight4 
+:val T3_p1 
+:val T3_p2 
+:val T3_p3 
+:val T3_p4 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val T3_c4 
+:val T3_numbaggages 
+:val T3_numfreebaggages 
+:val T3_status 
+:val actT2
+:val false
+:val C
+

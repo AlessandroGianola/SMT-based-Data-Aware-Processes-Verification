@@ -1,0 +1,36 @@
+E+   =   Job-Hiring-Process
+E1   =   Acquisition-following-RFQ
+E2   =   Airline-Check-In
+E3   =   Amazon-Fulfillment
+E4   =   BPI-Web-Registration-with-Moderator
+E5   =   BPI-Web-Registration-without-Moderator
+E6   =   Bank-Account-Opening
+E7   =   Book-Writing-and-Publishing
+E8   =   Commercial-Financing
+E9   =   Credit-Review-and-Approval
+E10 =   Customer-Quotation-Request
+E11 =   Employee-Expense-Reimbursement-Alternative-1
+E12 =   Employee-Expense-Reimbursement-Alternative-2
+E13 =   Incident-Management-as-Collaboration
+E14 =   Incident-Management-as-Detailed-Collaboration
+E15 =   Insurance-Claim-Processing
+E16 =   Journal-Review-Process
+E17 =   LaserTec-Production-Process
+E18 =   Morgage-Approval
+E19 =   New-Car-Sales
+E20 =   Order-Fulfillment-and-Procurement
+E21 =   Order-Fulfillment
+E22 =   Order-Processing-with-Credit-Card-Authorization
+E23 =   Order-Processing
+E24 =   OrderFulfillment_new
+E25 =   Patient-Treatment-Abstract-Process
+E26 =   Patient-Treatment-Collaboration-Choreography
+E27 =   Patient-Treatment-Collaboration
+E28 =   Pizza-Co.-Delivery-Process
+E29 =   Property-and-Casualty-Insurance-Claim-Processing
+E30 =   Ship-Process-of-a-Hardware-Retailer
+E31 =   The-Pizza-Collaboration
+E32 =   Travel-Booking-with-Event-Sub-processes
+E33 =   Travel-Booking
+
+ 

@@ -1,0 +1,558 @@
+:comment LaserTec-Production-Process
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer)
+:smt (define-type Order)
+:smt (define-type Component)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerAddress ::(-> Customer String))
+:smt (define OrderComponent1 ::(-> Order Component))
+:smt (define OrderComponent2 ::(-> Order Component))
+:smt (define OrderComponent3 ::(-> Order Component))
+:smt (define OrderInstall ::(-> Order String))
+:smt (define OrderTotalPrice ::(-> Order int))
+:smt (define ComponentPrice ::(-> Component int))
+
+
+
+:smt (define OrderInitialized ::String)
+:smt (define OrderPlaced ::String)
+:smt (define PartsAssembled ::String)
+
+:db_driven 
+:db_sorts Customer Order Component String
+:db_functions CustomerName CustomerAddress OrderComponent1 OrderComponent2 OrderComponent3 OrderInstall OrderTotalPrice ComponentPrice
+:db_constants OrderInitialized OrderPlaced PartsAssembled
+:db_relations 
+
+
+
+:global T1_oid Order
+:global T1_status String
+:global T1_totalprice int
+:global T1_cid Customer
+:global T1_c1 Component
+:global T1_c2 Component
+:global T1_c3 Component
+:global T1_install String
+:global T1_c1price int
+:global T1_c2price int
+:global T1_c3price int
+:global T2_status String
+:global T2_address String
+:global T2_totalprice int
+:global T3_status String
+:global T3_c1 Component
+:global T3_c2 Component
+:global T3_c3 Component
+:global actT2 bool
+:global actT3 bool
+:global C int
+:global D int
+
+
+
+:initial
+:var x
+:cnj (= T1_oid NULL_Order)(= T1_status NULL_String)(= T1_totalprice -1)(=  T1_cid NULL_Customer)(= T1_c1 NULL_Component)(= T1_c2 NULL_Component)(= T1_c3 NULL_Component)(= T1_install NULL_String)(= T1_c1price -1)(= T1_c2price -1)(= T1_c3price -1)(= T2_status NULL_String)(= T2_address NULL_String)(= T2_totalprice -1)(= T3_status NULL_String)(=  T3_c1 NULL_Component)(=  T3_c2 NULL_Component)(= T3_c3 NULL_Component)(=  actT2 false)(= actT3 false)(= C 0)(= D 0)
+
+:u_cnj (= T3_status PartsAssembled) (= T3_c1 NULL_Component)(= T3_c2 NULL_Component)
+
+:eevar e Customer   
+:eevar d Order
+:eevar f Component
+:eevar g Component
+:eevar l Component
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: CreateOrder
+
+:comment T_1 InitializeOrder1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(not (= d NULL_Order))(not (= f NULL_Component))(not (= g NULL_Component))(not (= l NULL_Component))(not (= e NULL_Customer))(not (= m NULL_String))
+:numcases 1
+:case 
+
+
+:val d
+:val T1_status 
+:val T1_totalprice 
+:val e 
+:val f
+:val g 
+:val l 
+:val m 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val 1
+:val D
+
+
+
+:comment T_1 InitializeOrder2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 1)(= D 0)(=  (ComponentPrice T1_c1) q)(> q 0)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val q
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val 2
+:val D
+
+
+
+:comment T_1 InitializeOrder3
+
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 2)(= D 0)(=  (ComponentPrice T1_c2) q)(> q 0)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1
+:val T1_c2
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val q
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val 3
+:val D
+
+
+:comment T_1 InitializeOrder4
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 3)(= D 0)(=  (ComponentPrice T1_c3) q)(> q 0)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1
+:val T1_c2
+:val T1_c3
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val q 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val 4
+:val D
+
+
+:comment T_1 InitializeOrder5
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 4) (= D 0)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val OrderInitialized 
+:val (+ T1_c1price (+ T1_c2price T1_c3price  )) 
+:val T1_cid 
+:val T1_c1
+:val T1_c2
+:val T1_c3
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val 0
+:val D
+
+
+
+
+:comment T_2: PlaceOrder
+
+:comment T_2 opening
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= T1_status OrderInitialized)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T1_status 
+:val NULL_String
+:val T1_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val true 
+:val actT3 
+:val C
+:val D
+
+
+
+
+
+:comment T_2 OrderConfirm
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= T2_status OrderInitialized)(not (= m NULL_String))(> T2_totalprice 0)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val OrderPlaced 
+:val m
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val C
+:val D
+
+
+
+
+:comment T_2 closing
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= T2_status OrderPlaced)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T2_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val false
+:val actT3 
+:val C
+:val D
+
+
+
+:comment T_3: AssembleParts
+
+:comment T_3 opening
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= T1_status OrderPlaced)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T1_status 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val actT2 
+:val true
+:val C
+:val D
+
+
+
+:comment T_3 OrderLaserParts1
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= T3_status OrderPlaced)(not (= f NULL_Component))
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val PartsAssembled 
+:val f 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val C
+:val D
+
+
+
+
+
+:comment T_3 OrderLaserParts2
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= T3_status OrderPlaced)(not (= f NULL_Component))
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val PartsAssembled  
+:val T3_c1
+:val f 
+:val T3_c3 
+:val actT2 
+:val actT3 
+:val C
+:val D
+
+
+:comment T_3 OrderLaserParts3
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= T3_status OrderPlaced)(not (= f NULL_Component))
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T1_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val PartsAssembled  
+:val T3_c1
+:val T3_c2
+:val f 
+:val actT2 
+:val actT3 
+:val C
+:val D
+
+
+
+
+
+
+
+:comment T_3 closing
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= T3_status PartsAssembled)
+:numcases 1
+:case 
+
+
+:val T1_oid 
+:val T3_status 
+:val T1_totalprice 
+:val T1_cid 
+:val T1_c1 
+:val T1_c2 
+:val T1_c3 
+:val T1_install 
+:val T1_c1price
+:val T1_c2price
+:val T1_c3price 
+:val T2_status 
+:val T2_address 
+:val T2_totalprice 
+:val T3_status 
+:val T3_c1 
+:val T3_c2 
+:val T3_c3 
+:val actT2 
+:val false 
+:val C
+:val D
