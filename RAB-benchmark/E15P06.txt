@@ -1,0 +1,1275 @@
+:comment Insurance-Claim-Processing
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer)
+:smt (define-type Policy)
+:smt (define-type BankAcct)
+:smt (define-type String)
+
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerCredit ::(-> Customer int))
+:smt (define PolicyCoverage ::(-> Policy int))
+:smt (define PolicyType ::(-> Policy String))
+:smt (define PolicyCid ::(-> Policy Customer))
+:smt (define PolicyCredit ::(-> Policy int))
+:smt (define PolicyDeduct ::(-> Policy int))
+:smt (define BankAcctName ::(-> BankAcct String))
+:smt (define BankAcctCid ::(-> BankAcct Customer))
+
+
+
+
+:smt (define Init ::String)
+:smt (define PolicyFound ::String)
+:smt (define Accepted ::String)
+:smt (define Rejected ::String)
+:smt (define Closed ::String)
+
+
+
+:db_driven 
+:db_sorts Customer Policy BankAcct String
+:db_functions CustomerName CustomerCredit PolicyCoverage PolicyType PolicyCid PolicyCredit PolicyDeduct BankAcctName BankAcctCid 
+:db_constants  Init  PolicyFound  Accepted  Rejected  Closed
+:db_relations 
+
+:local Claims1  Customer
+:local Claims2  String
+:local Claims3  String
+:local Claims4  int
+
+
+
+:global T1_status String
+:global T1_cid Customer
+:global T1_claimname String
+:global T1_type String
+:global T1_amount int
+:global T1_pid Policy
+:global T2_cid Customer
+:global T2_pid Policy
+:global T2_claimname String
+:global T2_type String
+:global T2_amount int
+:global T2_status String
+:global T2_creditscore int
+:global T2_coverage int
+:global T2_requiredcredit int
+:global T3_cid Customer
+:global T3_pid Policy
+:global T3_amount int
+:global T3_status String
+:global T3_aid BankAcct
+:global T3_amountpaid int
+:global T3_deductible int
+:global actT2 bool
+:global actT3 bool
+:global C int
+:global D int
+:global E int
+:global F int
+:global G int
+
+
+
+
+:initial
+:var x
+:cnj (= T1_status NULL_String)(=  T1_cid NULL_Customer)(= T1_claimname NULL_String)(= T1_type NULL_String)(= T1_amount -1)(= T1_pid NULL_Policy)(= T2_cid NULL_Customer)(= T2_pid NULL_Policy)(= T2_claimname NULL_String)(= T2_type NULL_String)(= T2_amount -1)(= T2_status NULL_String)(=  T2_creditscore -1)(= T2_coverage -1)(= T2_requiredcredit -1)(= T3_cid NULL_Customer)(= T3_pid NULL_Policy)(= T3_amount -1)(= T3_status NULL_String)(= T3_aid NULL_BankAcct)(= T3_amountpaid -1)(= T3_deductible -1)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)(=  actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)
+
+:u_cnj (= T1_status Closed)(not (= T2_cid NULL_Customer))(not (= (CustomerCredit T2_cid) T2_creditscore))
+
+:eevar e Customer     
+:eevar d Policy
+:eevar f BankAcct
+:eevar g String
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: Insurance
+
+:comment T_1 AddNewClaim1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= m NULL_String))(not (= n NULL_String))(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val e 
+:val m
+:val n 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val 1
+:val D
+:val E
+:val F
+:val G
+
+
+:comment T_1 AddNewClaim2
+
+
+:comment T2
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= C 1)(= D 0)(= E 0)(= F 0)(= G 0)(> q 0)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)
+:numcases 2
+:case (= x j)
+:val T1_cid
+:val T1_claimname 
+:val T1_type 
+:val q  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val q
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val 0
+:val D
+:val E
+:val F
+:val G
+
+
+:case
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val q
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val 0
+:val D
+:val E
+:val F
+:val G
+
+
+:comment T_1 InsertClaim1
+
+
+:comment T3
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T1_cid NULL_Customer))(not (= T1_claimname NULL_String))(not (= T1_type NULL_String))(> T1_amount 0)(= Claims1[x]   NULL_Customer)(= Claims2[x]   NULL_String)(= Claims3[x]   NULL_String)(= Claims4[x]   -1)
+:numcases 2
+:case (= x j)
+:val T1_cid  
+:val T1_claimname 
+:val T1_type 
+:val T1_amount  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+:case
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:comment T_1 UpdateClaim1
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T1_status Init))(not (= e NULL_Customer))(not (= m NULL_String))(not (= n NULL_String))
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val e 
+:val m
+:val n
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val 1
+:val E
+:val F
+:val G
+
+
+
+
+:comment T_1  UpdateClaim2
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 1)(= E 0)(= F 0)(= G 0)(> q 0)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val q
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val 0
+:val E
+:val F
+:val G
+
+
+
+:comment T_1 RetrieveClaim
+
+
+:comment T6
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= Claims1[x]   NULL_Customer))(not (= Claims2[x]   NULL_String))(not (= Claims3[x]   NULL_String))(> Claims4[x]   -1)
+:numcases 2
+:case (= x j)
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val Init
+:val Claims1[x]  
+:val Claims2[x]
+:val Claims3[x] 
+:val Claims4[x]
+:val NULL_Policy 
+:val T2_cid 
+:val T2_pid
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val Init
+:val Claims1[x]  
+:val Claims2[x]
+:val Claims3[x] 
+:val Claims4[x]
+:val NULL_Policy 
+:val T2_cid 
+:val T2_pid
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:comment T_2: Review
+
+:comment T_2 opening
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T1_status Init)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T1_cid 
+:val NULL_Policy
+:val T1_claimname 
+:val T1_type 
+:val T1_amount 
+:val NULL_String
+:val -1 
+:val -1 
+:val -1
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val true
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:comment T_2 GetPolicy
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T2_cid NULL_Customer))(not (= d NULL_Policy))(= (PolicyCid d) T2_cid)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val d 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val PolicyFound
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:comment T_2 CheckPolicy1
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T2_status PolicyFound)(not (= T2_cid NULL_Customer))(= (CustomerCredit T2_cid) q)(>= q 400)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val q
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val 1
+:val F
+:val G
+
+
+:comment T_2 CheckPolicy2
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 1)(= F 0)(= G 0)(not (= T2_pid NULL_Policy))(= (PolicyCoverage T2_pid) q)(>= q T2_amount)(= (PolicyType T2_pid) T2_type)(= (PolicyCid T2_pid) T2_cid)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val q 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val 2
+:val F
+:val G
+
+
+
+:comment T_2 CheckPolicy3
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 2)(= F 0)(= G 0)(= (PolicyCredit T2_pid) q)(>= T2_creditscore q)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val Accepted
+:val T2_creditscore 
+:val T2_coverage 
+:val q 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val 0
+:val F
+:val G
+
+
+:comment T_2 RejectPolicy1
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T2_status PolicyFound)(not (= T2_cid NULL_Customer))(= (CustomerCredit T2_cid) q)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val q 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val 1
+:val G
+
+
+:comment T_2 RejectPolicy2
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 1)(= G 0)(not (= T2_pid NULL_Policy))(= (PolicyCoverage T2_pid) q)(= (PolicyType T2_pid) T2_type)(= (PolicyCid T2_pid) T2_cid)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val q
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val 2
+:val G
+
+
+:comment T_2 RejectPolicy3
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 2)(= G 0)(= (PolicyCredit T2_pid) q)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val q 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val 3
+:val G
+
+
+:comment T_2 RejectPolicy4
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 3)(= G 0)(<= T2_coverage T2_amount)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val Rejected
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val 0
+:val G
+
+
+:comment T_2 RejectPolicy5
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 3)(= G 0)(< T2_creditscore T2_requiredcredit)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val Rejected
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val 0
+:val G
+
+
+
+:comment T_2 closing
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(not (= T2_status PolicyFound))(not (= T2_status NULL_String))
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T2_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T2_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val false
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+:comment T_3: Payment
+
+
+:comment T_3 opening
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T1_status Accepted)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T1_cid
+:val T1_pid 
+:val T1_amount 
+:val NULL_String 
+:val NULL_BankAcct
+:val -1
+:val -1 
+:val actT2 
+:val true
+:val C
+:val D
+:val E
+:val F
+:val G
+
+
+
+:comment T_3 Pay1
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(>= q 0)(= (PolicyDeduct T3_pid) q)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val q 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val 1
+
+:comment T_3 Pay2
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 1)(= q (+ T3_amount (* -1 T3_deductible)))
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val q
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val 2
+
+
+
+:comment T_3 Pay3
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 2)(not (= f NULL_BankAcct))
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T1_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val Closed 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val actT3 
+:val C
+:val D
+:val E
+:val F
+:val 0
+
+
+
+
+
+
+
+:comment T_3 closing
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= C 0)(= D 0)(= E 0)(= F 0)(= G 0)(= T3_status Closed)(>= T3_amountpaid 0)
+:numcases 1
+:case 
+:val Claims1[j]  
+:val Claims2[j]  
+:val Claims3[j]  
+:val Claims4[j]  
+
+
+
+:val T3_status 
+:val T1_cid 
+:val T1_claimname
+:val T1_type 
+:val T1_amount 
+:val T1_pid 
+:val T2_cid 
+:val T2_pid 
+:val T2_claimname 
+:val T2_type 
+:val T2_amount 
+:val T2_status 
+:val T2_creditscore 
+:val T2_coverage 
+:val T2_requiredcredit 
+:val T3_cid
+:val T3_pid 
+:val T3_amount 
+:val T3_status 
+:val T3_aid 
+:val T3_amountpaid 
+:val T3_deductible 
+:val actT2 
+:val false
+:val C
+:val D
+:val E
+:val F
+:val G

@@ -1,0 +1,2758 @@
+:comment Journal-Review-Process
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Author) 
+:smt (define-type Reviewer) 
+:smt (define-type Paper)
+:smt (define-type Field)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define AuthorName ::(-> Author String))
+:smt (define AuthorField1 ::(-> Author Field))
+:smt (define AuthorField2 ::(-> Author Field))
+:smt (define AuthorField3 ::(-> Author Field))
+:smt (define ReviewerName ::(-> Reviewer String))
+:smt (define ReviewerType ::(-> Reviewer String))
+:smt (define ReviewerField1 ::(-> Reviewer Field))
+:smt (define ReviewerField2 ::(-> Reviewer Field))
+:smt (define ReviewerField3 ::(-> Reviewer Field))
+:smt (define PaperTitle ::(-> Paper String))
+:smt (define PaperAuthor ::(-> Paper Reviewer))
+:smt (define PaperField1 ::(-> Paper Field))
+:smt (define PaperField2 ::(-> Paper Field))
+:smt (define PaperField3  ::(-> Paper Field))
+:smt (define FieldName ::(-> Field String))
+
+
+
+
+:smt (define AcceptingSubmission ::String)
+:smt (define Submitted ::String)
+:smt (define DeskRejected ::String)
+:smt (define Rejected ::String)
+:smt (define Checked ::String)
+:smt (define Resubmitted ::String)
+:smt (define Revision ::String)
+:smt (define EM ::String)
+:smt (define FormalDeficits ::String)
+:smt (define NoFormalDeficits ::String)
+:smt (define SentBackToAuthor ::String)
+:smt (define Resubmit ::String)
+:smt (define AE::String)
+:smt (define GE ::String)
+:smt (define AfterFirstRound ::String)
+:smt (define AtLeastTwoReviewers ::String)
+:smt (define Accept ::String)
+:smt (define Reject ::String)
+:smt (define ReviewResultReady ::String)
+:smt (define FinalResultReady ::String)
+:smt (define RecheckDecision ::String)
+:smt (define SE ::String)
+:smt (define CommentProvided ::String)
+:smt (define DecisionSent ::String)
+:smt (define PaperPublished ::String)
+:smt (define Written ::String)
+:smt (define TemplateTransferred ::String)
+:smt (define HasOneReviewer ::String)
+:smt (define HasNoReviewer ::String)
+
+
+
+:db_driven 
+:db_sorts  Author Reviewer Paper Field String
+:db_functions AuthorName AuthorField1 AuthorField2 AuthorField3 ReviewerName ReviewerType ReviewerField1 ReviewerField2 ReviewerField3 PaperTitle PaperAuthor PaperField1 PaperField2 PaperField3 FieldName
+:db_constants  AcceptingSubmission Submitted DeskRejected Rejected Checked Resubmitted Revision EM FormalDeficits NoFormalDeficits SentBackToAuthor Resubmit AE GE AfterFirstRound
+:db_constants  AtLeastTwoReviewers Accept Reject ReviewResultReady FinalResultReady RecheckDecision SE CommentProvided DecisionSent PaperPublished Written TemplateTransferred HasOneReviewer HasNoReviewer
+:db_relations 
+
+:local SentEmail1  Author
+:local SentEmail2  String
+:local SentEmail3  String
+:local SentEmail4  String
+:local SentEmail5  Field
+:local CandidateReviewers1 Reviewer
+
+
+
+:global T1_title String
+:global T1_content String
+:global T1_template String
+:global T1_aid Author
+:global T1_rid Reviewer
+:global T1_r1 Reviewer
+:global T1_r2 Reviewer
+:global T1_fid Field
+:global T1_status String
+:global T1_result1 String
+:global T1_result2 String
+:global T1_finalresult String
+:global T1_comment String
+:global T2_title String
+:global T2_content String
+:global T2_template String
+:global T2_aid Author
+:global T2_fid Field
+:global T2_status String
+:global T3_fid Field
+:global T3_pid Paper
+:global T3_rid Reviewer
+:global T3_r1 Reviewer
+:global T3_r2 Reviewer
+:global T3_status String
+:global actT2 bool
+:global actT3 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_title NULL_String)  (=  T1_content NULL_String) (=   T1_template NULL_String) (= T1_aid NULL_Author)(= T1_rid NULL_Reviewer)(= T1_r1 NULL_Reviewer)(= T1_r2 NULL_Reviewer) (= T1_fid NULL_Field)(= T1_status NULL_String)(= T1_result1 NULL_String)(= T1_result2 NULL_String)(= T1_finalresult NULL_String)(= T1_comment NULL_String) (=  T2_title NULL_String)  (=  T2_content NULL_String) (=   T2_template NULL_String) (= T2_aid NULL_Author)(= T2_fid NULL_Field)(= T2_status NULL_String)(= T3_fid NULL_Field)(= T3_pid NULL_Paper)(= T3_rid NULL_Reviewer)(= T3_r1 NULL_Reviewer)(= T3_r2 NULL_Reviewer) (=  T3_status NULL_String)(= SentEmail1[x]   NULL_Author)(= SentEmail2[x]   NULL_String)(= SentEmail3[x]   NULL_String)(= SentEmail4[x]   NULL_String)(= SentEmail5[x]   NULL_Field)(= CandidateReviewers1[x]   NULL_Reviewer)(=  actT2 false)(= actT3 false)
+
+:u_cnj (not (= SentEmail1[z1] NULL_Author))(= T1_status Rejected)
+
+:eevar e Author   
+:eevar d Reviewer
+:eevar f Paper
+:eevar g Field
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: JournalReview
+
+:comment T_1 Initialize
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NULL_String)
+:numcases 1
+:case 
+:val SentEmail1[j]  
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]  
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val AcceptingSubmission
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 ProceedDekReject1
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Submitted)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val DeskRejected 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 ProceedDekReject2
+
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Submitted)(not (= l NULL_String))(not (= m NULL_String))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val m 
+:val l
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val Checked 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 SendRejectNotificationToAuthor
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= T1_status DeskRejected)(= SentEmail1[x]   NULL_Author)(= SentEmail2[x]   NULL_String)(= SentEmail3[x]   NULL_String)(= SentEmail4[x]   NULL_String)(= SentEmail5[x]   NULL_Field)
+:numcases 2
+:case (= x j)
+:val T1_aid  
+:val T1_title   
+:val T1_content  
+:val T1_template   
+:val T1_fid  
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val Rejected
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val Rejected
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 CheckFormalIssues1
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Checked)(not (= l EM))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val l
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 CheckFormalIssues2
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Resubmitted)(not (= l EM))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val l
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 CheckFormalIssues3
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Revision)(not (= l EM))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val l
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 CheckFormalIssues4
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Checked)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val EM
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val NoFormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 CheckFormalIssues5
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Resubmitted)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val EM
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val NoFormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 CheckFormalIssues6
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Revision)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val EM
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val NoFormalDeficits
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 SendBackToAuthor
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status FormalDeficits)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val SentBackToAuthor 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 CorrectFormalDeficits
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status SentBackToAuthor)(not (= l NULL_String))(not (= m NULL_String))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val m
+:val l 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val Resubmitted 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 AssignPaperToAEorGE1
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NoFormalDeficits)(not (= d NULL_Reviewer))(= (ReviewerType d) AE)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val d 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val DeskRejected
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 AssignPaperToAEorGE2
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NoFormalDeficits)(not (= d NULL_Reviewer))(= (ReviewerType d) GE)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val d 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val DeskRejected
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 AssignPaperToAEorGE3
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NoFormalDeficits)(not (= d NULL_Reviewer))(= (ReviewerType d) AE)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val d 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val AfterFirstRound
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+
+:comment T_1 AssignPaperToAEorGE4
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NoFormalDeficits)(not (= d NULL_Reviewer))(= (ReviewerType d) GE)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val d 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val AfterFirstRound
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 ReviewPaper1
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status AtLeastTwoReviewers)(not (= T1_r1 NULL_Reviewer))(not (= T1_r2 NULL_Reviewer))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val ReviewResultReady
+:val Accept
+:val Accept 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 ReviewPaper2
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status AtLeastTwoReviewers)(not (= T1_r1 NULL_Reviewer))(not (= T1_r2 NULL_Reviewer))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val ReviewResultReady
+:val Accept 
+:val Reject
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 ReviewPaper3
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status AtLeastTwoReviewers)(not (= T1_r1 NULL_Reviewer))(not (= T1_r2 NULL_Reviewer))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val ReviewResultReady
+:val Reject
+:val Accept
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+
+:comment T_1 ReviewPaper4
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status AtLeastTwoReviewers)(not (= T1_r1 NULL_Reviewer))(not (= T1_r2 NULL_Reviewer))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val ReviewResultReady
+:val Reject 
+:val Reject 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 MakeAEGDecision1
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(= T1_result1 Accept)(= T1_result2 Accept)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady
+:val T1_result1 
+:val T1_result2 
+:val Accept 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 MakeAEGDecision2
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(= T1_result1 Reject)(= T1_result2 Reject)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady 
+:val T1_result1 
+:val T1_result2 
+:val Reject
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 MakeAEGDecision3
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(not (= T1_result1 T1_result2))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady
+:val T1_result1 
+:val T1_result2 
+:val Accept 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 MakeAEGDecision4
+
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(not (= T1_result1 T1_result2))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady
+:val T1_result1 
+:val T1_result2 
+:val Reject
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+:comment T_1 MakeAEGDecision5
+
+
+:comment T25
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(not (= T1_result1 T1_result2))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady
+:val T1_result1 
+:val T1_result2 
+:val Resubmit
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1 MakeAEGDecision6
+
+
+:comment T26
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ReviewResultReady)(not (= T1_result1 T1_result2))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val FinalResultReady
+:val T1_result1 
+:val T1_result2 
+:val Revision
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 AssignManuscrptToSE
+
+
+:comment T27
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status FinalResultReady)(not (= d NULL_Reviewer))(= (ReviewerType d) SE)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val d 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val RecheckDecision
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_1 ProvideComments
+
+
+:comment T28
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status RecheckDecision)(not (= l NULL_String))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val CommentProvided 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val l
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_1  SendDecisionToAuthor
+
+
+:comment T29
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status CommentProvided)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val DecisionSent 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_1 SendAcceptedPaperToSpringer
+
+
+:comment T30
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status DecisionSent)(= T1_finalresult Accept)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val PaperPublished 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_2: Submission
+
+:comment T_2 opening1
+
+
+:comment T31
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status AcceptingSubmission)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val NULL_String
+:val NULL_String
+:val NULL_String 
+:val NULL_Author 
+:val NULL_Field
+:val NULL_String 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val true 
+:val actT3 
+
+
+:comment T_2 opening2
+
+
+:comment T32
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Resubmit)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val NULL_String
+:val NULL_String
+:val NULL_String 
+:val NULL_Author 
+:val NULL_Field
+:val NULL_String 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val true 
+:val actT3 
+
+
+:comment T_2 WriteManuscript
+
+
+:comment T33
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(not (= l NULL_String))(not (= e NULL_Author)) (not (= g NULL_Field))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val l
+:val T2_content 
+:val T2_template 
+:val e
+:val g 
+:val Written
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 TransferContentTo
+
+
+:comment T34
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status Written)(not (= l NULL_String))
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val l 
+:val T2_aid 
+:val T2_fid 
+:val TemplateTransferred 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:comment T_2 SubmitManuscript
+
+
+:comment T35
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status TemplateTransferred)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val Submitted
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_2 closing 
+
+
+:comment T36 
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status Submitted)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T2_title 
+:val T1_content 
+:val T1_template 
+:val T2_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T2_fid
+:val T2_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val false
+:val actT3 
+
+
+
+
+:comment T_3: InviteReviewer
+
+:comment T_3 opening
+
+
+:comment T37
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(=  T1_status AfterFirstRound)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T1_fid 
+:val NULL_Paper 
+:val NULL_Reviewer
+:val NULL_Reviewer
+:val NULL_Reviewer
+:val NULL_String
+:val actT2 
+:val true 
+
+
+
+
+
+:comment T_3 AddCandidateReviewers1
+
+
+:comment T38
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(= (ReviewerField1 d) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 AddCandidateReviewers2
+
+
+:comment T39
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(= (ReviewerField2 d) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val d  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+:comment T_3 AddCandidateReviewers3
+
+
+:comment T40
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(= (ReviewerField3 d) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val d  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+
+
+:comment T_3 AddCandidateReviewers4
+
+
+:comment T41
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(not (= f NULL_Paper))(= (PaperAuthor f) d)(= (PaperField1 f) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val d 
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+
+:comment T_3 AddCandidateReviewers5
+
+
+:comment T42
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(not (= f NULL_Paper))(= (PaperAuthor f) d)(= (PaperField2 f) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val d
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3
+
+
+
+:comment T_3 AddCandidateReviewers6
+
+
+:comment T43
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= d NULL_Reviewer))(not (= f NULL_Paper))(= (PaperAuthor f) d)(= (PaperField3 f) T3_fid)(= CandidateReviewers1[x] NULL_Reviewer)
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val d  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val f 
+:val d 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val actT3 
+
+
+
+
+
+:comment T_3 RetrieveCandidateReviewer1
+
+
+:comment T44
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= T3_r1 NULL_Reviewer)(not (= CandidateReviewers1[x] NULL_Reviewer))
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val NULL_Reviewer  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val CandidateReviewers1[x] 
+:val T3_r2 
+:val HasOneReviewer
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val CandidateReviewers1[x] 
+:val T3_r2 
+:val HasOneReviewer
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 RetrieveCandidateReviewer2
+
+
+:comment T45
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(not (= T3_r1 NULL_Reviewer))(= T3_r2 NULL_Reviewer)(not (= CandidateReviewers1[x] NULL_Reviewer))
+:numcases 2
+:case (= x j)
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val NULL_Reviewer  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1
+:val CandidateReviewers1[x]
+:val AtLeastTwoReviewers
+:val actT2 
+:val actT3 
+
+
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1
+:val CandidateReviewers1[x]
+:val AtLeastTwoReviewers
+:val actT2 
+:val actT3 
+
+
+
+:comment T_3 Restart
+
+
+:comment T46
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T1_r1 
+:val T1_r2 
+:val T1_fid
+:val T1_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val NULL_Reviewer
+:val NULL_Reviewer
+:val HasNoReviewer 
+:val actT2 
+:val actT3 
+
+
+
+
+
+
+
+:comment T_3 closing
+
+
+:comment T47
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status AtLeastTwoReviewers)
+:numcases 1
+:case 
+:val SentEmail1[j]   
+:val SentEmail2[j]   
+:val SentEmail3[j]   
+:val SentEmail4[j]   
+:val SentEmail5[j]   
+:val CandidateReviewers1[j]  
+
+
+
+:val T1_title 
+:val T1_content 
+:val T1_template 
+:val T1_aid 
+:val T1_rid 
+:val T3_r1 
+:val T3_r2 
+:val T1_fid
+:val T3_status 
+:val T1_result1 
+:val T1_result2 
+:val T1_finalresult 
+:val T1_comment 
+:val T2_title 
+:val T2_content 
+:val T2_template 
+:val T2_aid 
+:val T2_fid 
+:val T2_status 
+:val T3_fid 
+:val T3_pid 
+:val T3_rid 
+:val T3_r1 
+:val T3_r2 
+:val T3_status 
+:val actT2 
+:val false 
+

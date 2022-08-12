@@ -1,0 +1,1878 @@
+:comment Credit-Review-and-Approval
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type TransactionHistory) 
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define TransactionHistoryName ::(-> TransactionHistory String))
+:smt (define TransactionHistoryType ::(-> TransactionHistory String))
+
+
+
+:smt (define Evaluating ::String)
+:smt (define Yes ::String)
+:smt (define No ::String)
+:smt (define Accepted ::String)
+:smt (define Rejected ::String)
+:smt (define Evaluated ::String)
+:smt (define Bad ::String)
+
+
+:db_driven 
+:db_sorts TransactionHistory String
+:db_functions TransactionHistoryName  TransactionHistoryType
+:db_constants  Evaluating Yes No Accepted Rejected Evaluated Bad
+:db_relations 
+
+
+:local LetterOne1 String
+:local LetterOne2 String
+:local LetterOne3 String
+:local LetterTwo1  String
+:local LetterTwo2  String
+:local LetterTwo3 String
+:local LetterTwo4  TransactionHistory
+:local LetterTwo5  TransactionHistory
+:local LetterTwo6  TransactionHistory
+:local LetterTwo7  TransactionHistory
+:local LetterTwo8  TransactionHistory
+:local FoundTransaction TransactionHistory
+
+
+
+:global T1_name String
+:global T1_status String
+:global T1_approved String
+:global T1_bad1 TransactionHistory
+:global T1_bad2 TransactionHistory
+:global T1_bad3 TransactionHistory
+:global T1_bad4 TransactionHistory
+:global T1_bad5 TransactionHistory
+:global T1_internal String
+:global T2_name String
+:global T2_status String
+:global T2_approved String
+:global T2_tid TransactionHistory
+:global T2_bad1 TransactionHistory
+:global T2_bad2 TransactionHistory
+:global T2_bad3 TransactionHistory
+:global T2_bad4 TransactionHistory
+:global T2_bad5 TransactionHistory
+:global T2_type String
+:global T2_isbad1 String
+:global T2_isbad2 String
+:global T2_isbad3 String
+:global T2_isbad4 String
+:global T2_isbad5 String
+:global actT2 bool
+
+
+
+
+:initial
+:var x
+:cnj (=  T1_name NULL_String)(= T1_status NULL_String)(= T1_approved NULL_String)(= T1_bad1 NULL_TransactionHistory)(= T1_bad2 NULL_TransactionHistory)(= T1_bad3 NULL_TransactionHistory)(= T1_bad4 NULL_TransactionHistory)(= T1_bad5 NULL_TransactionHistory)(=  T1_internal NULL_String)(= T2_name NULL_String)(= T2_status NULL_String)(= T2_approved NULL_String)(= T2_tid NULL_TransactionHistory)(= T2_bad1 NULL_TransactionHistory)(= T2_bad2 NULL_TransactionHistory)(= T2_bad3 NULL_TransactionHistory)(= T2_bad4 NULL_TransactionHistory)(= T2_bad5 NULL_TransactionHistory)(= T2_type NULL_String)(= T2_isbad1 NULL_String)(= T2_isbad2 NULL_String)(= T2_isbad3 NULL_String)(= T2_isbad4 NULL_String)(= T2_isbad5 NULL_String)(= LetterOne1[x]   NULL_String)(= LetterOne2[x]  NULL_String)(= LetterOne3[x] NULL_String)(= LetterTwo1[x]  NULL_String)(= LetterTwo2[x]  NULL_String)(= LetterTwo3[x] NULL_String)(= LetterTwo4[x]  NULL_TransactionHistory)(= LetterTwo5[x]  NULL_TransactionHistory)(= LetterTwo6[x]  NULL_TransactionHistory)(= LetterTwo7[x]  NULL_TransactionHistory)(= LetterTwo8[x]  NULL_TransactionHistory)(= FoundTransaction[x] NULL_TransactionHistory)(=  actT2 false)
+
+:u_cnj (= T2_status Evaluated)(= T2_approved No)
+
+:eevar e TransactionHistory  
+:eevar d TransactionHistory 
+:eevar f TransactionHistory 
+:eevar g TransactionHistory 
+:eevar l TransactionHistory 
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q String
+
+
+:comment T_1: CreditReview
+
+:comment T_1 EvaluateCreditReport1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(not (= m NULL_String))
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val m 
+:val Evaluating 
+:val NULL_String 
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val Yes
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:comment T_1 EvaluateCreditReport2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(not (= m NULL_String))
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val m 
+:val Evaluating 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String  
+:val No
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_1 SendResultAccept
+
+
+:comment T3
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= T1_status Evaluated)(= T1_approved Yes)(= T1_internal No)(= LetterOne1[x]   NULL_String)(= LetterOne2[x]  NULL_String)(= LetterOne3[x] NULL_String)
+:numcases 2
+:case (= x j)
+:val T1_name
+:val T1_status
+:val T1_approved
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val Accepted
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val Accepted
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_1 SendResultReject
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= T1_status Evaluated)(= T1_approved Yes)(= T1_internal No)(= LetterTwo1[x]  NULL_String)(= LetterTwo2[x]  NULL_String)(= LetterTwo3[x] NULL_String)(= LetterTwo4[x]  NULL_TransactionHistory)(= LetterTwo5[x]  NULL_TransactionHistory)(= LetterTwo6[x]  NULL_TransactionHistory)(= LetterTwo7[x]  NULL_TransactionHistory)(= LetterTwo8[x]  NULL_TransactionHistory)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val T1_name 
+:val T1_status  
+:val T1_approved 
+:val T1_bad1  
+:val T1_bad2 
+:val T1_bad3  
+:val T1_bad4  
+:val T1_bad5  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val Rejected
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val Rejected
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2: ApproveCredit
+
+:comment T_2 opening
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= T1_status Evaluating)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T1_name 
+:val NULL_String
+:val NULL_String
+:val NULL_TransactionHistory  
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory  
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val NULL_TransactionHistory 
+:val NULL_String
+:val NULL_String 
+:val NULL_String 
+:val NULL_String 
+:val NULL_String
+:val NULL_String
+:val true 
+
+
+
+:comment T_2 SearchHistory
+
+
+:comment T6
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(not (= e NULL_TransactionHistory))(= FoundTransaction[x] NULL_TransactionHistory)(= (TransactionHistoryName e) T2_name)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val e
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val e
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val e
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction1-1
+
+
+:comment T7
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad1 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(= (TransactionHistoryType FoundTransaction[x]) Bad)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val FoundTransaction[x]
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val Yes 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val FoundTransaction[x]
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val Yes 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction1-2
+
+
+:comment T8
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad1 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(not (= (TransactionHistoryType FoundTransaction[x]) Bad))
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val FoundTransaction[x]
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val No
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val FoundTransaction[x]
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val No
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2 RetrieveBadTransaction2-1
+
+
+:comment T9
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad2 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(= (TransactionHistoryType FoundTransaction[x]) Bad)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val FoundTransaction[x] 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val Yes
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val FoundTransaction[x]
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val Yes 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction2-2
+
+
+:comment T10
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad2 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(not (= (TransactionHistoryType FoundTransaction[x]) Bad))
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val FoundTransaction[x] 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val No
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val FoundTransaction[x]
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val No 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2 RetrieveBadTransaction3-1
+
+
+:comment T11
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad3 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(= (TransactionHistoryType FoundTransaction[x]) Bad)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val FoundTransaction[x]
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val Yes 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val FoundTransaction[x]
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val Yes 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction3-2
+
+
+:comment T12
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad3 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(not (= (TransactionHistoryType FoundTransaction[x]) Bad))
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val FoundTransaction[x]
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val No
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val FoundTransaction[x]
+:val T2_bad4 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val No 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2 RetrieveBadTransaction4-1
+
+
+:comment T13
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad4 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(= (TransactionHistoryType FoundTransaction[x]) Bad)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val FoundTransaction[x] 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val Yes
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val FoundTransaction[x]
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val Yes
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction4-2
+
+
+:comment T14
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad4 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(not (= (TransactionHistoryType FoundTransaction[x]) Bad))
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val FoundTransaction[x] 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val No
+:val T2_isbad5 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val FoundTransaction[x] 
+:val T2_bad5 
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3 
+:val No
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2 RetrieveBadTransaction5-1
+
+
+:comment T15
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad5 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(= (TransactionHistoryType FoundTransaction[x]) Bad)
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val T2_bad4 
+:val FoundTransaction[x]
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val T2_isbad4
+:val Yes 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val T2_bad4
+:val FoundTransaction[x]
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val T2_isbad4
+:val Yes 
+:val actT2 
+
+
+
+:comment T_2 RetrieveBadTransaction5-2
+
+
+:comment T16
+:transition
+:var j
+:var x 
+:guard  (= actT2 true)(= T2_bad5 NULL_TransactionHistory)(not (= FoundTransaction[x] NULL_TransactionHistory))(not (= (TransactionHistoryType FoundTransaction[x]) Bad))
+:numcases 2
+:case (= x j)
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val NULL_TransactionHistory 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val T2_bad4
+:val FoundTransaction[x]
+:val (TransactionHistoryType FoundTransaction[x])  
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3
+:val T2_isbad4
+:val No 
+:val actT2 
+
+
+:case
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val FoundTransaction[x] 
+:val T2_bad1
+:val T2_bad2
+:val T2_bad3
+:val T2_bad4 
+:val FoundTransaction[x]
+:val (TransactionHistoryType FoundTransaction[x])
+:val T2_isbad1
+:val T2_isbad2
+:val T2_isbad3 
+:val T2_isbad4
+:val No
+:val actT2 
+
+
+
+
+
+:comment T_2 Decide1
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(= T2_isbad1 Yes)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val No 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 Decide2
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(= T2_isbad2 Yes)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val No 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 Decide3
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(= T2_isbad3 Yes)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val No 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+
+:comment T_2 Decide4
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(= T2_isbad4 Yes)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val No 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+:comment T_2 Decide5
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(= T2_isbad5 Yes)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val No 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+:comment T_2 Decide6
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_bad1 NULL_TransactionHistory))(not (= T2_bad2 NULL_TransactionHistory))(not (= T2_bad3 NULL_TransactionHistory))(not (= T2_bad4 NULL_TransactionHistory))(not (= T2_bad5 NULL_TransactionHistory))(not (= T2_isbad1 Yes))(not (= T2_isbad2 Yes))(not (= T2_isbad3 Yes))(not (= T2_isbad4 Yes))(not (= T2_isbad5 Yes))
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T1_status 
+:val T1_approved 
+:val T1_bad1 
+:val T1_bad2 
+:val T1_bad3 
+:val T1_bad4
+:val T1_bad5 
+:val T1_internal 
+:val T2_name 
+:val Evaluated
+:val Yes 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val actT2 
+
+
+
+
+
+:comment T_2 closing
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 true)(= T2_status Evaluated)
+:numcases 1
+:case 
+:val LetterOne1[j]
+:val LetterOne2[j]
+:val LetterOne3[j]
+:val LetterTwo1[j]  
+:val LetterTwo2[j]  
+:val LetterTwo3[j] 
+:val LetterTwo4[j]  
+:val LetterTwo5[j] 
+:val LetterTwo6[j]  
+:val LetterTwo7[j]  
+:val LetterTwo8[j]  
+:val FoundTransaction[j] 
+
+
+
+:val T1_name 
+:val T2_status 
+:val T2_approved 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3 
+:val T2_bad4
+:val T2_bad5 
+:val T1_internal 
+:val T2_name 
+:val T2_status 
+:val T2_approved 
+:val T2_tid 
+:val T2_bad1 
+:val T2_bad2 
+:val T2_bad3
+:val T2_bad4 
+:val T2_bad5 
+:val T2_type 
+:val T2_isbad1 
+:val T2_isbad2 
+:val T2_isbad3 
+:val T2_isbad4
+:val T2_isbad5 
+:val false 
+
