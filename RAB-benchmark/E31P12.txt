@@ -1,0 +1,2129 @@
+:comment The-Pizza-Collaboration
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Pizza) 
+:smt (define-type Ingredient) 
+:smt (define-type Customer)
+:smt (define-type Driver)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define PizzaName ::(-> Pizza String))
+:smt (define PizzaPrice ::(-> Pizza int))
+:smt (define PizzaSize ::(-> Pizza String))
+:smt (define PizzaIng1 ::(-> Pizza Ingredient))
+:smt (define PizzaIng2 ::(-> Pizza Ingredient))
+:smt (define PizzaIng3 ::(-> Pizza Ingredient))
+:smt (define IngredientName ::(-> Ingredient String))
+:smt (define IngredientPrice ::(-> Ingredient int))
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerAddr ::(-> Customer String))
+:smt (define DriverName ::(-> Driver String))
+
+
+
+:smt (define Init ::String)
+:smt (define Ordered ::String)
+:smt (define Cooked ::String)
+:smt (define PizzaPacked ::String)
+:smt (define Delivered ::String)
+:smt (define Paid ::String)
+:smt (define Validate ::String)
+:smt (define TakeOrder ::String)
+:smt (define ReTakeOrder ::String)
+:smt (define DriverAssigned ::String)
+:smt (define HasDriver ::String)
+:smt (define ComplainResolved ::String)
+:smt (define Complained ::String)
+:smt (define ComplainNotResolved ::String)
+:smt (define WaitOrder ::String)
+:smt (define TakingOrder ::String)
+
+
+:db_driven 
+:db_sorts Pizza Ingredient Customer Driver String
+:db_functions PizzaName  PizzaPrice  PizzaSize  PizzaIng1  PizzaIng2  PizzaIng3  IngredientName  IngredientPrice CustomerName  CustomerAddr  DriverName 
+:db_constants  Init  Ordered Cooked PizzaPacked Delivered Paid Validate TakeOrder ReTakeOrder DriverAssigned HasDriver ComplainResolved Complained ComplainNotResolved WaitOrder TakingOrder
+:db_relations 
+
+:local CandidateDrive1  Driver
+:local CandidateDrive2  String
+
+
+
+:global T1_cid Customer
+:global T1_name String
+:global T1_address String
+:global T1_pid Pizza
+:global T1_in1 Ingredient
+:global T1_in2 Ingredient
+:global T1_in3 Ingredient
+:global T1_did Driver
+:global T1_status String
+:global T1_totalprice int
+:global T1_price int
+:global T1_p1 int
+:global T1_p2 int
+:global T1_p3 int
+:global T1_amountpaid int
+:global T2_cid Customer
+:global T2_name String
+:global T2_address String
+:global T2_pid Pizza
+:global T2_in1 Ingredient
+:global T2_in2 Ingredient
+:global T2_in3 Ingredient
+:global T2_status String
+:global T2_tempin1 Ingredient
+:global T2_tempin2 Ingredient
+:global T2_tempin3 Ingredient
+:global T3_did Driver
+:global T3_zone String
+:global T3_address String
+:global T3_status String
+:global T4_comment String
+:global T4_status String
+:global actT2 bool
+:global actT3 bool
+:global actT4 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_cid NULL_Customer) (=  T1_name NULL_String)  (=  T1_address NULL_String) (=   T1_pid NULL_Pizza) (= T1_in1 NULL_Ingredient)(= T1_in2 NULL_Ingredient)(= T1_in3 NULL_Ingredient)(= T1_did NULL_Driver) (= T1_status NULL_String)(=  T1_totalprice -1)(=  T1_price -1)(=  T1_p1 -1)(=  T1_p2 -1)(=  T1_p3 -1)(=  T1_amountpaid -1) (=  T2_cid NULL_Customer) (=  T2_name NULL_String)  (=  T2_address NULL_String) (=   T2_pid NULL_Pizza) (= T2_in1 NULL_Ingredient)(= T2_in2 NULL_Ingredient)(= T2_in3 NULL_Ingredient)(= T2_status NULL_String)  (= T2_tempin1 NULL_Ingredient)(= T2_tempin2 NULL_Ingredient)(= T2_tempin3 NULL_Ingredient)(= T3_did NULL_Driver)(= T3_zone NULL_String)(= T3_address NULL_String) (= T3_status NULL_String)(=  T4_comment NULL_String)(=  T4_status NULL_String)(= CandidateDrive1[x]   NULL_Driver)(= CandidateDrive2[x]   NULL_String)(=  actT2 false)(= actT3 false)(= actT4 false)
+
+:u_cnj (= T1_status Ordered)(not (= T1_cid NULL_Customer))(not (= (CustomerName T1_cid) T2_name))
+
+:eevar e Pizza   
+:eevar d Ingredient
+:eevar f Customer
+:eevar g Driver
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: PizzaOrder
+
+:comment T_1 ReceivePizzaOrder
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status NULL_String)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val NULL_Customer 
+:val T1_name 
+:val T1_address 
+:val NULL_Pizza
+:val NULL_Ingredient 
+:val NULL_Ingredient 
+:val NULL_Ingredient  
+:val T1_did 
+:val Init
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_1 PreparePizza
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Ordered)(not (= g NULL_Driver))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val g
+:val Cooked
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_1 PackagePizza
+
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Cooked)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val PizzaPacked
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+:comment T_1  DeliveryPizza
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status PizzaPacked)(not (= T1_did NULL_Driver))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Delivered
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_1 ReceivePayment1
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in1 NULL_Ingredient)(not (= T1_in2 NULL_Ingredient))(not (= T1_in3 NULL_Ingredient))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val 0
+:val (IngredientPrice T1_in2)
+:val (IngredientPrice T1_in3)
+:val (+ (PizzaPrice T1_pid) (+ (+  0 (IngredientPrice T1_in2)) (IngredientPrice T1_in3)))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+:comment T_1 ReceivePayment2
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in2 NULL_Ingredient)(not (= T1_in1 NULL_Ingredient))(not (= T1_in3 NULL_Ingredient))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val (IngredientPrice T1_in1)
+:val 0
+:val (IngredientPrice T1_in3)
+:val (+ (PizzaPrice T1_pid) (+ (+  (IngredientPrice T1_in1) 0) (IngredientPrice T1_in3)))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+:comment T_1 ReceivePayment3
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in3 NULL_Ingredient)(not (= T1_in2 NULL_Ingredient))(not (= T1_in1 NULL_Ingredient))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val (IngredientPrice T1_in1)
+:val (IngredientPrice T1_in2)
+:val 0
+:val (+ (PizzaPrice T1_pid) (+ (+  (IngredientPrice T1_in1) (IngredientPrice T1_in2)) 0))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_1 ReceivePayment4
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in1 NULL_Ingredient)(= T1_in2 NULL_Ingredient)(not (= T1_in3 NULL_Ingredient))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val 0
+:val 0
+:val (IngredientPrice T1_in3)
+:val (+ (PizzaPrice T1_pid) (+ (+  0 0) (IngredientPrice T1_in3)))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_1 ReceivePayment5
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in3 NULL_Ingredient)(= T1_in2 NULL_Ingredient)(not (= T1_in1 NULL_Ingredient))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val (IngredientPrice T1_in1)
+:val 0
+:val 0
+:val (+ (PizzaPrice T1_pid) (+ (+  (IngredientPrice T1_in1) 0) 0))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+:comment T_1 ReceivePayment6
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Delivered)(not (= T1_pid NULL_Pizza))(= T1_in3 NULL_Ingredient)(= T1_in2 NULL_Ingredient)(= T1_in1 NULL_Ingredient)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val Paid 
+:val T1_totalprice 
+:val (PizzaPrice T1_pid)
+:val 0
+:val 0
+:val 0
+:val (+ (PizzaPrice T1_pid) (+ (+ 0 0) 0))
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4
+
+
+
+
+:comment T_2: CustomerCall
+
+:comment T_2 opening
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Init)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val NULL_Customer 
+:val NULL_String
+:val NULL_String
+:val NULL_Pizza 
+:val NULL_Ingredient 
+:val NULL_Ingredient 
+:val NULL_Ingredient  
+:val NULL_String
+:val NULL_Ingredient 
+:val NULL_Ingredient  
+:val NULL_Ingredient 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val true 
+:val actT3
+:val actT4 
+
+
+
+:comment T_2 TakeCustomerCoordinates
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_address NULL_String)(not (= l NULL_String))(not (= m NULL_String))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid
+:val m 
+:val l 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val Validate
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+:comment T_2 ValidateCoordinatesWithHistoryFile1
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Validate)(not (= f NULL_Customer))(= (CustomerName f) T2_name)(= (CustomerAddr f) T2_address)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val f 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val TakeOrder
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+:comment T_2 ValidateCoordinatesWithHistoryFile2
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Validate)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val NULL_Customer
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val TakeOrder
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+:comment T_2 TakePizzaOrder1
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2 TakePizzaOrder2
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e 
+:val NULL_Ingredient
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+:comment T_2 TakePizzaOrder3
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e 
+:val NULL_Ingredient
+:val NULL_Ingredient
+:val (PizzaIng3 e) 
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2 TakePizzaOrder4
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e 
+:val NULL_Ingredient
+:val NULL_Ingredient
+:val NULL_Ingredient
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2 TakePizzaOrder5
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e 
+:val (PizzaIng1  e)
+:val NULL_Ingredient
+:val NULL_Ingredient
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+
+:comment T_2 TakePizzaOrder6
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e 
+:val (PizzaIng1  e)
+:val (PizzaIng2  e)
+:val NULL_Ingredient
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+:comment T_2 TakePizzaOrder7
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakingOrder)(not (= e NULL_Pizza))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val e
+:val (PizzaIng1  e)
+:val NULL_Ingredient
+:val (PizzaIng3  e)
+:val WaitOrder 
+:val (PizzaIng1 e)
+:val (PizzaIng2  e)
+:val (PizzaIng3 e) 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+
+:comment T_2   TakePizzaOrder8
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status WaitOrder)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val Ordered
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2   TakePizzaOrder9
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status WaitOrder)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val ReTakeOrder 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2  TakePizzaOrder10
+
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status TakeOrder)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val TakingOrder 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2  TakePizzaOrder11
+
+
+:comment T25
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status ReTakeOrder)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val TakingOrder 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_2 closing
+
+
+:comment T26
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= actT4 false)(= T2_status Ordered)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2 
+:val T2_in3 
+:val T1_did 
+:val T2_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val false
+:val actT3
+:val actT4 
+
+
+
+:comment T_3: Delivery
+
+
+:comment T_3 opening
+
+
+:comment T27
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)(= T1_status Cooked)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val NULL_Driver 
+:val NULL_String 
+:val T1_address 
+:val NULL_String
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val true
+:val actT4 
+
+
+
+
+:comment T_3 AddFreeDriver
+
+
+:comment T28
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(not (= g NULL_Driver))(not (= m NULL_String))(= CandidateDrive1[x]   NULL_Driver)(= CandidateDrive2[x]   NULL_String)
+:uguard (not (= CandidateDrive1[j] g)) (not (= CandidateDrive2[j] m))
+:numcases 2
+:case (= x j)
+:val  g  
+:val  m  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val g 
+:val m
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val g 
+:val m
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_3 GetFreeDriver
+
+
+:comment T29
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(not (= g NULL_Driver))(not (= m NULL_String))(not (= CandidateDrive1[x]   NULL_Driver))(not (= CandidateDrive2[x]   NULL_String))
+:numcases 2
+:case (= x j)
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j] 
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val CandidateDrive1[x] 
+:val CandidateDrive2[x] 
+:val T3_address 
+:val HasDriver
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val CandidateDrive1[x] 
+:val CandidateDrive2[x] 
+:val T3_address 
+:val HasDriver
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_3 AssignDriver1
+
+
+:comment T30
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= T3_status HasDriver)(= T3_zone T3_address)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val DriverAssigned
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_3  AssignDriver2
+
+
+:comment T31
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= T3_status HasDriver)(not (= T3_zone T3_address))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val NULL_String
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+:comment T_3 closing
+
+
+:comment T32
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= actT4 false)(= T3_status DriverAssigned)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T3_did 
+:val T3_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val false
+:val actT4 
+
+
+
+:comment T_4 opening
+
+
+:comment T33
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 false)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val NULL_String
+:val NULL_String 
+:val actT2 
+:val actT3
+:val true
+
+
+
+
+:comment T_4 ReceiveComplain
+
+
+:comment T34
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= T4_comment NULL_String)(not (= m NULL_String))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val m 
+:val Complained 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+
+:comment T_4   Resolve1
+
+
+:comment T35
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(not (= T4_comment NULL_String))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val ComplainResolved 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+:comment T_4   Resolve2
+
+
+:comment T36
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(not (= T4_comment NULL_String))
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T1_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val ComplainNotResolved 
+:val actT2 
+:val actT3
+:val actT4 
+
+
+
+
+
+
+
+
+:comment T_4 closing
+
+
+:comment T37
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= actT4 true)(= T4_status ComplainResolved)
+:numcases 1
+:case 
+:val  CandidateDrive1[j]  
+:val  CandidateDrive2[j]  
+
+
+
+:val T1_cid 
+:val T1_name 
+:val T1_address 
+:val T1_pid 
+:val T1_in1 
+:val T1_in2 
+:val T1_in3 
+:val T1_did 
+:val T4_status 
+:val T1_totalprice 
+:val T1_price 
+:val T1_p1 
+:val T1_p2
+:val T1_p3 
+:val T1_amountpaid
+:val T2_cid 
+:val T2_name 
+:val T2_address 
+:val T2_pid 
+:val T2_in1 
+:val T2_in2
+:val T2_in3 
+:val T2_status 
+:val T2_tempin1
+:val T2_tempin2 
+:val T2_tempin3 
+:val T3_did 
+:val T3_zone 
+:val T3_address 
+:val T3_status 
+:val T4_comment 
+:val T4_status 
+:val actT2 
+:val actT3
+:val false 
+
