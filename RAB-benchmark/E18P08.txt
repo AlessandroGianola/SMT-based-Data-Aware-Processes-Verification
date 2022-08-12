@@ -1,0 +1,1043 @@
+:comment Morgage-Approval
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type BankAccount) 
+:smt (define-type Record)
+:smt (define-type MortgageType)
+:smt (define-type String)
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerIncome ::(-> Customer int))
+:smt (define BankAccountCust ::(-> BankAccount Customer))
+:smt (define BankAccountDeposit ::(-> BankAccount int))
+:smt (define RecordCust ::(-> Record Customer))
+:smt (define RecordType ::(-> Record String))
+:smt (define MortgageTypeName ::(-> MortgageType String))
+:smt (define MortgageTypeAmount ::(-> MortgageType int))
+:smt (define MortgageTypeLength ::(-> MortgageType int))
+:smt (define MortgageTypeInter ::(-> MortgageType int))
+
+
+
+:smt (define NotInterested ::String)
+:smt (define SevenDays ::String)
+:smt (define FillApplication ::String)
+:smt (define VIP ::String)
+:smt (define Normal ::String)
+:smt (define Archived ::String)
+:smt (define CompletedApplication ::String)
+:smt (define RejectSent ::String)
+:smt (define Offer ::String)
+:smt (define Reject ::String)
+:smt (define OfferMade ::String)
+:smt (define Good ::String)
+
+
+
+:db_driven 
+:db_sorts Customer BankAccount Record MortgageType String
+:db_functions  CustomerName   CustomerIncome   BankAccountCust   BankAccountDeposit  RecordCust   RecordType   MortgageTypeName  MortgageTypeAmount  MortgageTypeLength  MortgageTypeInter
+:db_constants NotInterested  SevenDays FillApplication VIP Normal Archived CompletedApplication OfferMade RejectSent Offer Reject Good
+:db_relations 
+
+:local Archives1 Customer
+:local Info1  BankAccount
+:local Info2  Record
+
+
+
+:global T1_cid Customer
+:global T1_tid MortgageType
+:global T1_length int
+:global T1_amount int
+:global T1_apptype String
+:global T1_status String
+:global T2_cid Customer
+:global T2_tid MortgageType
+:global T2_length int
+:global T2_amount int
+:global T2_apptype String
+:global T2_status String
+:global T2_bid BankAccount
+:global T2_rid Record
+:global T2_bankamount int
+:global T2_income int
+:global T2_maxamount int
+:global T2_maxlength int
+:global actT2 bool
+:global C int
+
+
+
+:initial
+:var x
+:cnj (=  T1_cid NULL_Customer) (=  T1_tid  NULL_MortgageType)  (=  T1_length  -1) (=  T1_amount  -1) (=  T1_apptype  NULL_String) (=  T1_status  NULL_String) (=  T2_cid NULL_Customer) (=  T2_tid  NULL_MortgageType)  (=  T2_length  -1) (=  T2_amount  -1) (=  T2_apptype  NULL_String) (=  T2_status  NULL_String) (=  T2_bid NULL_BankAccount) (=  T2_rid  NULL_Record)  (=  T2_bankamount  -1) (=  T2_income  -1) (=  T2_maxamount  -1) (=  T2_maxlength  -1)  (= Archives1[x]   NULL_Customer)(= Info1[x]   NULL_BankAccount)(= Info2[x]   NULL_Record)(=  actT2 false)(= C 0)
+
+:u_cnj (= T2_status RejectSent)(= T1_status OfferMade)
+
+:eevar e Customer  
+:eevar d BankAccount
+:eevar f Record
+:eevar g MortgageType
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: MortgageApproval
+
+:comment T_1 SendOutApplication1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val VIP
+:val NotInterested
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_1 SendOutApplication2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val Normal
+:val NotInterested
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+
+
+:comment T_1 SendOutApplication3
+
+:comment T3
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val VIP
+:val SevenDays
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_1 SendOutApplication4
+
+
+:comment T4
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val Normal
+:val SevenDays
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_1 SendOutApplication5
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val VIP
+:val FillApplication
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+:comment T_1 SendOutApplication6
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(not (= e NULL_Customer))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val e
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val Normal
+:val FillApplication
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_1  ArchiveDetails
+
+
+:comment T7
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= C 0)(= T1_status NotInterested)(= Archives1[x] NULL_Customer)
+:numcases 2
+:case (= x j)
+:val T1_cid
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val Archived
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+:case
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val Archived
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_1 CompleteApplication1
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(= T1_status FillApplication)(> q 0)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val q 
+:val T1_amount 
+:val T1_apptype
+:val CompletedApplication
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val 1
+
+
+:comment T_1 CompleteApplication2
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 false)(= C 1)(> q 0)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length
+:val q
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val 2
+
+
+
+
+:comment T_1 CompleteApplication3
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 false)(= C 2)(not (= g NULL_MortgageType))
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val g
+:val T1_length
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val 0
+
+
+
+:comment T_1 SendReminder1
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(= T1_status SevenDays)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val NotInterested
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2
+:val C
+
+
+
+:comment T_1 SendReminder2
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(= T1_status SevenDays)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val SevenDays
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2
+:val C
+
+
+
+:comment T_1 SendReminder3
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(= T1_status SevenDays)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val FillApplication
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2
+:val C
+
+
+
+
+:comment T_2: Assessment
+
+:comment T_2 opening
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 false)(= C 0)(= T1_status CompletedApplication)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype 
+:val T1_status 
+:val NULL_BankAccount
+:val NULL_Record
+:val -1
+:val -1 
+:val -1 
+:val -1 
+:val true 
+:val C
+
+
+
+:comment T_2 ProvideInfo
+
+
+:comment T15
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= C 0)(= Info1[x] NULL_BankAccount)(= Info2[x] NULL_Record)(not (= d NULL_BankAccount)) (not (= f NULL_Record))(= (BankAccountCust  d) T2_cid)(= (RecordCust  f) T2_cid)
+:numcases 2
+:case (= x j)
+:val Archives1[j]
+:val d 
+:val f  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val CompletedApplication 
+:val d
+:val f 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val CompletedApplication 
+:val d
+:val f 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_2  MakeAssessment1
+
+
+:comment T16
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= C 0)(= T2_status CompletedApplication)(not (= Info1[x] NULL_BankAccount))(not (= Info2[x] NULL_Record))(not (= T2_tid NULL_MortgageType))(not (= T2_cid NULL_Customer))(= (BankAccountCust Info1[x])  T2_cid)(= (RecordCust Info2[x]) T2_cid)(= (RecordType Info2[x]) Good)(> (+ (CustomerIncome T2_cid) (BankAccountDeposit Info1[x])) T2_amount ) (< T2_amount  ( MortgageTypeAmount T2_tid) ) (< T2_length (MortgageTypeLength T2_tid))
+:numcases 2
+:case (= x j)
+:val Archives1[j]
+:val NULL_BankAccount
+:val NULL_Record  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val Offer
+:val Info1[x]  
+:val Info2[x] 
+:val (BankAccountDeposit Info1[x])
+:val (CustomerIncome T2_cid)
+:val (MortgageTypeAmount T2_tid) 
+:val (MortgageTypeLength T2_tid) 
+:val actT2 
+:val C
+
+
+:case 
+
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val Offer 
+:val Info1[x]  
+:val Info2[x] 
+:val (BankAccountDeposit Info1[x]) 
+:val (CustomerIncome T2_cid)
+:val (MortgageTypeAmount T2_tid) 
+:val (MortgageTypeLength T2_tid) 
+:val actT2 
+:val C
+
+
+
+:comment T_2  MakeAssessment2
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(= C 0)(= T2_status CompletedApplication)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val Reject
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+
+
+:comment T_2 OfferMortgage
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 true)(= C 0)(= T2_status Offer)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val OfferMade
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+:comment T_2  SendReject
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 true)(= C 0)(= T2_status Reject)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T1_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val RejectSent
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val actT2 
+:val C
+
+
+
+
+:comment T_2 closing1
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 true)(= C 0)(= T2_status OfferMade)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T2_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val false
+:val C
+
+
+:comment T_2 closing2
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 true)(= C 0)(= T2_status RejectSent)
+:numcases 1
+:case 
+:val Archives1[j]
+:val Info1[j]  
+:val Info2[j]  
+
+
+
+:val T1_cid 
+:val T1_tid 
+:val T1_length 
+:val T1_amount 
+:val T1_apptype
+:val T2_status
+:val T2_cid 
+:val T2_tid 
+:val T2_length 
+:val T2_amount 
+:val T2_apptype 
+:val T2_status 
+:val T2_bid 
+:val T2_rid 
+:val T2_bankamount 
+:val T2_income 
+:val T2_maxamount 
+:val T2_maxlength 
+:val false
+:val C
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1004 @@
+:comment Order-Processing
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Order) 
+:smt (define-type Item) 
+:smt (define-type Customer)
+:smt (define-type String)
+
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define OrderIid ::(-> Order Item))
+:smt (define OrderAmount ::(-> Order int))
+:smt (define OrderCid ::(-> Order Customer))
+:smt (define ItemPrice ::(-> Item int))
+:smt (define ItemAvail ::(-> Item String))
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerRecord ::(-> Customer String))
+:smt (define CustomerPayment ::(-> Customer String))
+
+
+
+:smt (define True ::String)
+:smt (define Good ::String)
+:smt (define Accepted ::String)
+:smt (define False ::String)
+:smt (define Bad ::String)
+:smt (define Rejected ::String)
+:smt (define Shipped ::String)
+:smt (define InvoiceSent ::String)
+:smt (define PaymentAccepted ::String)
+:smt (define Paid ::String)
+:smt (define OrderFilled ::String)
+
+
+
+
+
+:db_driven 
+:db_sorts Order Item Customer String
+:db_functions OrderIid OrderAmount OrderCid ItemPrice ItemAvail CustomerName CustomerRecord CustomerPayment
+:db_constants  True Good Accepted False Bad Rejected Shipped InvoiceSent PaymentAccepted Paid OrderFilled 
+:db_relations 
+
+:local Candidate1  Order
+:local Record1  Order
+:local Record2  String
+:local Invoice1 String
+:local Invoice2 String
+:local Invoice3 int
+:local Shipment1 String
+:local Shipment2 Item
+:local Shipment3 int
+
+
+
+:global T1_oid Order
+:global T1_iid Item
+:global T1_amount int
+:global T1_cid Customer
+:global T1_status String
+:global T2_oid Order
+:global T2_iid Item
+:global T2_amount int
+:global T2_price int
+:global T2_cid Customer
+:global T2_name String
+:global T2_paymentmethod String
+:global T2_status String
+:global T2_total int
+:global actT2 bool
+
+
+
+
+:initial
+:var x
+:cnj (=  T1_oid NULL_Order)(= T1_iid NULL_Item)(= T1_amount -1)(= T1_cid NULL_Customer)(=  T1_status NULL_String)(= T2_oid NULL_Order)(=  T2_iid NULL_Item)(=  T2_amount -1)(= T2_price -1)(=  T2_cid NULL_Customer)(=  T2_name NULL_String)(= T2_paymentmethod NULL_String)(= T2_status NULL_String)(= T2_total -1)(= Candidate1[x]   NULL_Order)(= Record1[x]   NULL_Order)(= Record2[x]   NULL_String)(= Invoice1[x]   NULL_String)(= Invoice2[x]   NULL_String)(= Invoice3[x]   -1)(= Shipment1[x]   NULL_String)(= Shipment2[x]   NULL_Item)(= Shipment3[x]   -1)(=  actT2 false)
+
+:u_cnj (= T1_status Shipped)(= T1_oid NULL_Order)
+
+:eevar e Order 
+:eevar d Item
+:eevar f Customer
+:eevar g String
+:eevar l String
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: ReceiveOrder
+
+:comment T_1 Receive1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(not (= e NULL_Order))(= (ItemAvail (OrderIid e)) True)(= (CustomerRecord (OrderCid e)) Good)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val e
+:val (OrderIid e)
+:val (OrderAmount e)
+:val (OrderCid e)
+:val Accepted
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+:comment T_1 Receive2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(not (= e NULL_Order))(= (ItemAvail (OrderIid e)) False)(= (CustomerRecord (OrderCid e)) Bad)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val e
+:val (OrderIid e)
+:val (OrderAmount e)
+:val (OrderCid e)
+:val Rejected
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+
+:comment T_1 AddCandidateOrder
+
+
+:comment T3
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= Candidate1[x]   NULL_Order)
+:uguard (not (= Candidate1[j] T1_oid))
+:numcases 2
+:case (= x j)
+
+:val T1_oid
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+
+:comment T_1 RetrieveCandidateOrder1
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(not (= Candidate1[x]   NULL_Order))(= (ItemAvail (OrderIid Candidate1[x])) True)(= (CustomerRecord (OrderCid Candidate1[x])) Good)
+:numcases 2
+:case (= x j)
+
+:val NULL_Order
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val Candidate1[x] 
+:val (OrderIid Candidate1[x])
+:val (OrderAmount Candidate1[x]) 
+:val (OrderCid Candidate1[x])
+:val Accepted
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val Candidate1[x] 
+:val (OrderIid Candidate1[x])
+:val (OrderAmount Candidate1[x]) 
+:val (OrderCid Candidate1[x])
+:val Accepted
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+:comment T_1 RetrieveCandidateOrder2
+
+
+:comment T5
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(not (= Candidate1[x]   NULL_Order))(= (ItemAvail (OrderIid Candidate1[x])) False)(= (CustomerRecord (OrderCid Candidate1[x])) Bad)
+:numcases 2
+:case (= x j)
+
+:val NULL_Order
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val Candidate1[x] 
+:val (OrderIid Candidate1[x])
+:val (OrderAmount Candidate1[x]) 
+:val (OrderCid Candidate1[x])
+:val Rejected
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val Candidate1[x] 
+:val (OrderIid Candidate1[x])
+:val (OrderAmount Candidate1[x]) 
+:val (OrderCid Candidate1[x])
+:val Rejected
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+
+
+:comment T_1 CloseOrder1
+
+
+
+:comment T6
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= T1_status Rejected)(= Record1[x]   NULL_Order)(= Record2[x]   NULL_String)
+:uguard (not (= Record1[j] T1_oid))(not (= Record2[j] T1_status))
+:numcases 2
+:case (= x j)
+
+:val Candidate1[j]
+:val T1_oid
+:val T1_status
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val actT2
+
+
+
+
+:comment T_2: ProcessOrder
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= T1_status Accepted)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T1_oid 
+:val NULL_Item 
+:val -1
+:val -1 
+:val NULL_Customer
+:val NULL_String 
+:val NULL_String
+:val NULL_String
+:val -1 
+:val true
+
+
+
+
+:comment T_2 FillOrder1
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_oid NULL_Order))(= (OrderAmount T2_oid) 1)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val (OrderIid T2_oid)
+:val 1
+:val (ItemPrice (OrderIid T2_oid))
+:val (OrderCid T2_oid)
+:val (CustomerName (OrderCid T2_oid))
+:val (CustomerPayment (OrderCid T2_oid))
+:val OrderFilled 
+:val (* 1 (ItemPrice (OrderIid T2_oid)))
+:val actT2
+
+
+
+:comment T_2 FillOrder2
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_oid NULL_Order))(= (OrderAmount T2_oid) 2)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val (OrderIid T2_oid)
+:val 2
+:val (ItemPrice (OrderIid T2_oid))
+:val (OrderCid T2_oid)
+:val (CustomerName (OrderCid T2_oid))
+:val (CustomerPayment (OrderCid T2_oid))
+:val OrderFilled 
+:val (* 2 (ItemPrice (OrderIid T2_oid)))
+:val actT2
+
+
+
+:comment T_2 FillOrder3
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_oid NULL_Order))(= (OrderAmount T2_oid) 3)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val (OrderIid T2_oid)
+:val 3
+:val (ItemPrice (OrderIid T2_oid))
+:val (OrderCid T2_oid)
+:val (CustomerName (OrderCid T2_oid))
+:val (CustomerPayment (OrderCid T2_oid))
+:val OrderFilled 
+:val (* 3 (ItemPrice (OrderIid T2_oid)))
+:val actT2
+
+
+
+:comment T_2 FillOrder4
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_oid NULL_Order))(= (OrderAmount T2_oid) 4)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val (OrderIid T2_oid)
+:val 4
+:val (ItemPrice (OrderIid T2_oid))
+:val (OrderCid T2_oid)
+:val (CustomerName (OrderCid T2_oid))
+:val (CustomerPayment (OrderCid T2_oid))
+:val OrderFilled 
+:val (* 4 (ItemPrice (OrderIid T2_oid)))
+:val actT2
+
+
+
+:comment T_2 FillOrder5
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(not (= T2_oid NULL_Order))(= (OrderAmount T2_oid) 5)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val (OrderIid T2_oid)
+:val 5
+:val (ItemPrice (OrderIid T2_oid))
+:val (OrderCid T2_oid)
+:val (CustomerName (OrderCid T2_oid))
+:val (CustomerPayment (OrderCid T2_oid))
+:val OrderFilled 
+:val (* 5 (ItemPrice (OrderIid T2_oid)))
+:val actT2
+
+
+:comment T_2 SendInvoice
+
+
+:comment T13
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(> T2_total 0)(= Invoice1[x]   NULL_String)(= Invoice2[x]   NULL_String)(= Invoice3[x]   -1)
+:numcases 2
+:case (= x j)
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val T2_name
+:val T2_paymentmethod
+:val T2_total
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val InvoiceSent
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val InvoiceSent 
+:val T2_total 
+:val actT2
+
+
+
+:comment T_2 ShipOrder
+
+
+:comment T14
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(> T2_total 0)(= T2_status PaymentAccepted)(= Shipment1[x]   NULL_String)(= Shipment2[x]   NULL_Item)(= Shipment3[x]   -1)
+:numcases 2
+:case (= x j)
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val T2_name
+:val T2_iid
+:val T2_amount
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val Shipped 
+:val T2_total 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val Shipped
+:val T2_total 
+:val actT2
+
+
+:comment T_2 MakePayment
+
+
+:comment T15
+:transition
+:var j
+:var x
+:guard  (= actT2 true)(= T2_status InvoiceSent)(not (= Invoice1[x]   NULL_String))(not (= Invoice2[x]   NULL_String))(> Invoice3[x]   -1)
+:numcases 2
+:case (= x j)
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val NULL_String
+:val NULL_String
+:val -1
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val Invoice1[x]
+:val Invoice2[x]
+:val Paid
+:val Invoice3[x] 
+:val actT2
+
+:case
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val Invoice1[x]
+:val Invoice2[x]
+:val Paid
+:val Invoice3[x] 
+:val actT2
+
+
+
+
+
+
+
+
+
+:comment T_2 AcceptPayment
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 true)(= T2_status Paid)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T1_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val PaymentAccepted
+:val T2_total 
+:val actT2
+
+
+
+
+
+
+
+
+:comment T_2 closing
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 true)(= T2_status Shipped)
+:numcases 1
+:case 
+
+:val Candidate1[j]
+:val Record1[j]
+:val Record2[j]
+:val Invoice1[j]
+:val Invoice2[j]
+:val Invoice3[j]
+:val Shipment1[j]
+:val Shipment2[j]
+:val Shipment3[j]
+
+
+
+:val T1_oid 
+:val T1_iid 
+:val T1_amount 
+:val T1_cid 
+:val T2_status
+:val T2_oid 
+:val T2_iid 
+:val T2_amount 
+:val T2_price 
+:val T2_cid
+:val T2_name 
+:val T2_paymentmethod
+:val T2_status 
+:val T2_total 
+:val false
+
+
+
+
+

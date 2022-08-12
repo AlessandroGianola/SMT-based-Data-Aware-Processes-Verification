@@ -1,0 +1,913 @@
+:comment Order-Fulfillment-and-Procurement
+
+:index int
+
+
+:comment ----- TYPES DESCLARATIONS -------
+
+:smt (define-type Customer) 
+:smt (define-type CreditRecord) 
+:smt (define-type CreditCard)
+:smt (define-type Item)
+:smt (define-type Supplier)
+:smt (define-type String)
+
+:comment ---------- FUNCTIONS and PREDICATES -----------
+
+
+:smt (define CustomerName ::(-> Customer String))
+:smt (define CustomerPhone ::(-> Customer String))
+:smt (define CustomerAddr ::(-> Customer String))
+:smt (define CustomerCredit ::(-> Customer CreditCard))
+:smt (define CreditRecordStatus ::(-> CreditRecord String))
+:smt (define CreditRecordScore ::(-> CreditRecord int))
+:smt (define CreditRecordCid ::(-> CreditRecord Customer))
+:smt (define CreditCardStatus ::(-> CreditCard String))
+:smt (define ItemName ::(-> Item String))
+:smt (define ItemAvail ::(-> Item String))
+:smt (define ItemPrice ::(-> Item int))
+:smt (define ItemMethod1 ::(-> Item String))
+:smt (define ItemMethod2 ::(-> Item String))
+:smt (define SupplierIid ::(-> Supplier Item))
+:smt (define SupplierDeliverable ::(-> Supplier String))
+
+
+:smt (define Yes ::String)
+:smt (define ArticleAvailable ::String)
+:smt (define ArticleNotAvailable ::String)
+:smt (define PaymentReceived ::String)
+:smt (define CustomerInformed ::String)
+:smt (define ArticleRemoved ::String)
+:smt (define ToSettleFinance ::String)
+:smt (define LateDelivery ::String)
+:smt (define Undeliverable ::String)
+:smt (define MoreThanTwoDays ::String)
+:smt (define InTwoDays ::String)
+:smt (define HadCreditScore ::String)
+:smt (define Good ::String)
+:smt (define GoodCredit ::String)
+:smt (define BadCredit ::String)
+:smt (define Low ::String)
+:smt (define Medium  ::String)
+
+
+:db_driven 
+:db_sorts Customer CreditRecord CreditCard Item Supplier String
+:db_functions CustomerName CustomerPhone CustomerAddr CustomerCredit CreditRecordStatus CreditRecordScore CreditRecordCid CreditCardStatus ItemName ItemAvail ItemPrice ItemMethod1 ItemMethod2 SupplierIid SupplierDeliverable
+:db_constants  Yes ArticleAvailable ArticleNotAvailable PaymentReceived CustomerInformed ArticleRemoved ToSettleFinance LateDelivery Undeliverable MoreThanTwoDays InTwoDays HadCreditScore Good GoodCredit BadCredit Low Medium
+:db_relations 
+
+:local Orders1  Customer
+:local Orders2  Item
+:local Orders3  String
+
+
+
+:global T1_cid Customer
+:global T1_iid Item
+:global T1_status String
+:global T2_iid Item
+:global T2_sid Supplier
+:global T2_status String
+:global T3_iid Item
+:global T3_cid Customer
+:global T3_status String
+:global T3_method String
+:global T3_record CreditRecord
+:global actT2 bool
+:global actT3 bool
+
+
+
+:initial
+:var x
+:cnj (=  T1_cid NULL_Customer) (=  T1_cid NULL_Customer)(= T1_iid NULL_Item)(= T1_status NULL_String)(= T2_iid NULL_Item)(= T2_sid NULL_Supplier)(= T2_status NULL_String)(= T3_iid NULL_Item)(= T3_cid NULL_Customer)(= T3_status NULL_String)(= T3_method NULL_String)(= T3_record NULL_CreditRecord)(= Orders1[x]   NULL_Customer)(= Orders2[x]   NULL_Item)(= Orders3[x]   NULL_String)(=  actT2 false)(= actT3 false)
+
+:u_cnj (= T1_status ArticleRemoved)(= T2_status InTwoDays)
+
+:eevar e Customer   
+:eevar d CreditRecord
+:eevar f CreditCard
+:eevar g Item
+:eevar l Supplier
+:eevar m String
+:eevar n String
+:eevar o String
+:eevar p String
+:eevar q int
+
+
+:comment T_1: Main
+
+:comment T_1 TakeOrder1
+
+
+:comment T1
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NULL_String)(not (= e NULL_Customer))(not (= g NULL_Item))(= (ItemAvail g) Yes)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val e 
+:val g
+:val ArticleAvailable
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_1 TakeOrder2
+
+
+:comment T2
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status NULL_String)(not (= e NULL_Customer))(not (= g NULL_Item))(not (= (ItemAvail g) Yes))
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val e 
+:val g
+:val ArticleNotAvailable
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_1 RetrieveOrder
+
+
+:comment T3
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(= T1_status NULL_String)(not (=  Orders3[x] PaymentReceived))(not (= Orders3[x] CustomerInformed))(not (= Orders3[x] ArticleRemoved))(not (= Orders1[x]   NULL_Customer))(not (= Orders2[x]   NULL_Item))(not (= Orders3[x] NULL_String))
+:numcases 2
+:case (= x j)
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val Orders1[x]  
+:val Orders2[x] 
+:val Orders3[x] 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+:case
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val Orders1[x]  
+:val Orders2[x] 
+:val Orders3[x] 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+:comment T_1 InsertOrder
+
+
+:comment T4
+:transition
+:var j
+:var x
+:guard  (= actT2 false)(= actT3 false)(not (= T1_status NULL_String))(= Orders1[x]   NULL_Customer)(= Orders2[x]   NULL_Item)(= Orders3[x]   NULL_String)
+:numcases 2
+:case (= x j)
+:val T1_cid 
+:val T1_iid  
+:val T1_status 
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:case
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+:comment T_1 ShipArticle
+
+
+:comment T5
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ArticleAvailable)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val ToSettleFinance
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+:comment T_1 InformCustomer
+
+
+:comment T6
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status LateDelivery)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val CustomerInformed
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+:comment T_1 RemoveArticle
+
+
+:comment T7
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status Undeliverable)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val ArticleRemoved
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_2: Procurement
+
+:comment T_2 opening
+
+
+:comment T8
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ArticleNotAvailable)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T1_iid 
+:val NULL_Supplier
+:val NULL_String 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val true
+:val actT3 
+
+
+
+
+:comment T_2 CheckWithSupplier1
+
+
+:comment T9
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status NULL_String)(not (= l NULL_Supplier))(= (SupplierIid l) T2_iid)(= (SupplierDeliverable l) m)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val l 
+:val m 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_2 CheckWithSupplier2
+
+
+:comment T10
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status NULL_String)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val l 
+:val NULL_String
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+
+:comment T_2 LateDelivery
+
+
+:comment T11
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status MoreThanTwoDays)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val LateDelivery 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_2 OrderFromSupplier
+
+
+:comment T12
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status InTwoDays)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val ArticleAvailable
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+:comment T_2 closing1
+
+
+:comment T13
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status Undeliverable)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T2_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val false
+:val actT3 
+
+
+
+
+:comment T_2 closing2
+
+
+:comment T14
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status ArticleAvailable)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T2_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val false
+:val actT3 
+
+
+:comment T_2 closing1
+
+
+:comment T15
+:transition
+:var j
+:guard  (= actT2 true)(= actT3 false)(= T2_status LateDelivery)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T2_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val false
+:val actT3 
+
+
+
+:comment T_3: FinancialSettlement
+
+:comment T_3 opening
+
+
+
+:comment T16
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 false)(= T1_status ToSettleFinance)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T1_iid 
+:val T1_cid 
+:val NULL_String
+:val NULL_String
+:val NULL_CreditRecord 
+:val actT2
+:val true 
+
+
+
+:comment T_3 GetCreditScore
+
+
+:comment T17
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status NULL_String)(not (= d NULL_CreditRecord))(= (CreditRecordCid d) T3_cid)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val HadCreditScore 
+:val T3_method 
+:val d 
+:val actT2
+:val actT3 
+
+
+
+:comment T_3 Approve
+
+
+:comment T18
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(not (= T3_record NULL_CreditRecord))(= (CreditRecordStatus T3_record) Good)(= (CreditRecordCid T3_record) T3_cid)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val GoodCredit 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_3 Reject
+
+
+:comment T19
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(not (= T3_record NULL_CreditRecord))(= (CreditRecordStatus T3_record) Low)(= (CreditRecordCid T3_record) T3_cid)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val BadCredit 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+:comment T_3 Review1
+
+
+:comment T20
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(not (= T3_record NULL_CreditRecord))(= (CreditRecordStatus T3_record) Medium)(= (CreditRecordCid T3_record) T3_cid)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val GoodCredit
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_3 Review2
+
+
+:comment T21
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(not (= T3_record NULL_CreditRecord))(= (CreditRecordStatus T3_record) Medium)(= (CreditRecordCid T3_record) T3_cid)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val BadCredit
+:val T3_method 
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+:comment T_3 PayAndPickStock1
+
+
+:comment T22
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status GoodCredit)(not (= T3_iid NULL_Item))(= (ItemMethod1 T3_iid) m)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val PaymentReceived 
+:val m
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+:comment T_3 PayAndPickStock2
+
+
+:comment T23
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status GoodCredit)(not (= T3_iid NULL_Item))(= (ItemMethod2 T3_iid) m)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T1_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val PaymentReceived 
+:val m
+:val T3_record 
+:val actT2
+:val actT3 
+
+
+
+
+
+
+
+:comment T_3 closing
+
+
+:comment T24
+:transition
+:var j
+:guard  (= actT2 false)(= actT3 true)(= T3_status PaymentReceived)
+:numcases 1
+:case 
+:val Orders1[j]  
+:val Orders2[j]  
+:val Orders3[j]  
+
+
+
+:val T1_cid 
+:val T1_iid 
+:val T3_status 
+:val T2_iid 
+:val T2_sid 
+:val T2_status 
+:val T3_iid 
+:val T3_cid 
+:val T3_status 
+:val T3_method 
+:val T3_record 
+:val actT2
+:val false
+
+
